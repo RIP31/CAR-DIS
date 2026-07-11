@@ -1,9 +1,3 @@
-# Ignore temporary backup folders
-tempfronte/
-tempbackend/
-temp_frontend/
-temp_backend/
-
 # Python ignore
 __pycache__/
 *.py[cod]
