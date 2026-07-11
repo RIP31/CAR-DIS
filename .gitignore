@@ -6,6 +6,7 @@ __pycache__/
 .coverage
 htmlcov/
 .env
+*.db
 
 # Frontend ignore
 node_modules/
