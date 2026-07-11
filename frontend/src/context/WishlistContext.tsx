@@ -22,8 +22,8 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return;
     }
     try {
-      const response = await api.get<{ id: string; vehicle_id: string }[]>('/api/wishlist');
-      setWishlistIds(new Set(response.data.map(item => item.vehicle_id)));
+      const response = await api.get<{ id: string }[]>('/api/wishlist');
+      setWishlistIds(new Set(response.data.map(item => item.id)));
     } catch (err) {
       console.error('Failed to fetch wishlist', err);
     }

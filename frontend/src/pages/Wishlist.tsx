@@ -16,15 +16,14 @@ const Wishlist: React.FC = () => {
 
   useEffect(() => {
     const fetchWishlistVehicles = async () => {
-      if (!user || wishlistIds.size === 0) {
+      if (!user) {
         setVehicles([]);
         setLoading(false);
         return;
       }
       try {
-        const response = await api.get<Vehicle[]>('/api/vehicles');
-        const filtered = response.data.filter(v => wishlistIds.has(v.id));
-        setVehicles(filtered);
+        const response = await api.get<Vehicle[]>('/api/wishlist');
+        setVehicles(response.data);
       } catch (err) {
         console.error('Failed to fetch vehicles', err);
       } finally {
@@ -32,7 +31,7 @@ const Wishlist: React.FC = () => {
       }
     };
     fetchWishlistVehicles();
-  }, [user, wishlistIds]);
+  }, [user]);
 
   const handleUpdate = (updated: Vehicle) => {
     setVehicles(prev => prev.map(v => (v.id === updated.id ? updated : v)));
