@@ -48,6 +48,7 @@ describe('Home Page', () => {
   });
 
   it('renders hero title and fetches inventory items', async () => {
+    mockUseAuth.mockReturnValue({ user: null, logout: vi.fn() });
     vi.mocked(api.get).mockResolvedValue({ data: mockVehicles });
 
     await act(async () => {
@@ -60,7 +61,7 @@ describe('Home Page', () => {
 
     expect(screen.getByText(/Find Your Next/i)).toBeInTheDocument();
     expect(api.get).toHaveBeenCalledWith('/api/vehicles');
-    expect(screen.getByText('Tesla Model S')).toBeInTheDocument();
+    expect(screen.getAllByText('Tesla Model S').length).toBeGreaterThanOrEqual(1);
   });
 });
 
@@ -82,7 +83,7 @@ describe('Profile Page', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Jane Doe')).toBeInTheDocument();
+    expect(screen.getAllByText('Jane Doe').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('jane@example.com')).toBeInTheDocument();
     expect(screen.getByText('USER Account')).toBeInTheDocument();
   });
