@@ -73,7 +73,7 @@ describe('Register Page', () => {
       <MemoryRouter initialEntries={['/register']}>
         <Routes>
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<div>Login Page</div>} />
+          <Route path="/" element={<div>Home Catalog</div>} />
         </Routes>
       </MemoryRouter>
     );
@@ -93,6 +93,6 @@ describe('Register Page', () => {
     });
 
     expect(mockRegister).toHaveBeenCalledWith('John Doe', 'john@example.com', 'Password123!', 'USER');
-    expect(screen.getByText('Login Page')).toBeInTheDocument();
+    expect(screen.getByText('Home Catalog')).toBeInTheDocument();
   });
 });
