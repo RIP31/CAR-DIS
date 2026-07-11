@@ -18,6 +18,7 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
@@ -77,7 +78,7 @@ const Navbar: React.FC = () => {
               }`}
             >
               <Shield className="h-3.5 w-3.5" />
-              Dashboard
+              Admin Portal
             </Link>
           )}
         </div>
@@ -106,7 +107,7 @@ const Navbar: React.FC = () => {
               to="/login"
               className="bg-white hover:bg-slate-200 text-black px-5 py-2 rounded-full transition-all text-xs tracking-wider uppercase font-bold shadow-md shadow-white/5 border-none"
             >
-              Login
+              Sign In
             </Link>
           )}
         </div>
@@ -167,7 +168,7 @@ const Navbar: React.FC = () => {
                 className="py-2 border-b border-white/5 text-rose-400 font-bold flex items-center gap-1.5"
               >
                 <Shield className="h-4 w-4" />
-                Dashboard
+                Admin Dashboard
               </Link>
             )}
           </div>
@@ -195,7 +196,7 @@ const Navbar: React.FC = () => {
                 to="/login"
                 className="w-full text-center bg-white text-black py-3 rounded-full transition-all text-xs tracking-wider uppercase font-bold shadow-md shadow-white/5 block"
               >
-                Login
+                Sign In
               </Link>
             )}
           </div>

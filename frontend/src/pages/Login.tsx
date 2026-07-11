@@ -68,13 +68,12 @@ const Login: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
-              <label htmlFor="email" className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Email Address
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-3.5 h-4.5 w-4.5 text-slate-600" />
                 <input
-                  id="email"
                   type="email"
                   required
                   placeholder="name@example.com"
@@ -86,13 +85,12 @@ const Login: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="password" className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-3.5 h-4.5 w-4.5 text-slate-600" />
                 <input
-                  id="password"
                   type="password"
                   required
                   placeholder="••••••••"

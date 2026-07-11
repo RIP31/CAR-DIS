@@ -57,6 +57,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
       const response = await api.post<Vehicle>(`/api/vehicles/${vehicle.id}/purchase`);
       showToast(`Successfully purchased ${vehicle.make} ${vehicle.model}!`, 'success');
       
+      // Save purchase event locally for profile mapping
       const history = JSON.parse(localStorage.getItem('purchases') || '[]');
       history.push({
         id: vehicle.id,
@@ -164,7 +165,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
             </span>
           </div>
 
-          {/* Pricing */}
+          {/* Pricing & Stock status */}
           <div className="flex justify-between items-baseline pt-1">
             <span className="text-2xl font-extrabold text-white font-['Outfit']">
               ${vehicle.price.toLocaleString()}

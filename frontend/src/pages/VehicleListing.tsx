@@ -18,6 +18,7 @@ const VehicleListing: React.FC = () => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
+  // Sidebar Filter States (prefilled from URL if exists)
   const [make, setMake] = useState(searchParams.get('make') || '');
   const [model, setModel] = useState(searchParams.get('model') || '');
   const [category, setCategory] = useState(searchParams.get('category') || '');
@@ -26,13 +27,16 @@ const VehicleListing: React.FC = () => {
   const [year, setYear] = useState(searchParams.get('year') || '');
   const [fuelType, setFuelType] = useState(searchParams.get('fuel_type') || '');
   const [transmission, setTransmission] = useState(searchParams.get('transmission') || '');
-  const [sortBy, setSortBy] = useState('newest');
+  const [sortBy, setSortBy] = useState('newest'); // price_asc, price_desc, newest, make_asc
 
+  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  // Search input from home
   const searchQuery = searchParams.get('search') || '';
 
+  // Fetch inventory
   const fetchInventory = async () => {
     setLoading(true);
     try {
@@ -48,7 +52,9 @@ const VehicleListing: React.FC = () => {
 
       let response;
       if (Object.keys(params).length > 0 || searchQuery) {
+        // If searchQuery exists from Home search, we can merge make/model filters or look for match
         if (searchQuery) {
+          // Let's filter on the backend using query params
           params.make = searchQuery; 
         }
         response = await api.get<Vehicle[]>('/api/vehicles/search', { params });
@@ -58,6 +64,7 @@ const VehicleListing: React.FC = () => {
 
       let data = response.data;
 
+      // Handle search query locally as fallback if make search was too specific
       if (searchQuery) {
         const query = searchQuery.toLowerCase().trim();
         const filtered = response.data.filter(
@@ -66,6 +73,7 @@ const VehicleListing: React.FC = () => {
             v.model.toLowerCase().includes(query) ||
             v.category.toLowerCase().includes(query)
         );
+        // If local search found results, use them, otherwise use the backend response
         if (filtered.length > 0) {
           data = filtered;
         }
@@ -84,6 +92,7 @@ const VehicleListing: React.FC = () => {
     fetchInventory();
   }, [searchParams, make, model, category, minPrice, maxPrice, year, fuelType, transmission]);
 
+  // Handle Sort
   const getSortedVehicles = () => {
     const list = [...vehicles];
     switch (sortBy) {
@@ -101,6 +110,7 @@ const VehicleListing: React.FC = () => {
 
   const sortedVehicles = getSortedVehicles();
 
+  // Paginate list
   const totalPages = Math.ceil(sortedVehicles.length / itemsPerPage);
   const paginatedVehicles = sortedVehicles.slice(
     (currentPage - 1) * itemsPerPage,
@@ -191,7 +201,7 @@ const VehicleListing: React.FC = () => {
         {/* Sidebar & Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
           
-          {/* Left Filters Sidebar */}
+          {/* 1. Left Filters Sidebar (Desktop) */}
           <aside className="hidden lg:block glass p-6 rounded-2xl border border-white/5 space-y-6 sticky top-24 max-h-[85vh] overflow-y-auto bg-[#0d0e12]/60">
             <div className="flex justify-between items-center border-b border-white/5 pb-3">
               <h2 className="text-sm font-bold uppercase text-white tracking-widest flex items-center gap-2">
@@ -206,6 +216,7 @@ const VehicleListing: React.FC = () => {
               </button>
             </div>
 
+            {/* Filters Form */}
             <div className="space-y-4 text-sm">
               {/* Make Input */}
               <div className="space-y-1.5">
@@ -237,7 +248,7 @@ const VehicleListing: React.FC = () => {
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm font-medium"
+                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm"
                 >
                   <option value="">All Categories</option>
                   {CATEGORIES.map((cat) => (
@@ -285,7 +296,7 @@ const VehicleListing: React.FC = () => {
                 <select
                   value={fuelType}
                   onChange={(e) => setFuelType(e.target.value)}
-                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm font-medium"
+                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm"
                 >
                   <option value="">All Fuel Types</option>
                   {FUEL_TYPES.map((ft) => (
@@ -300,7 +311,7 @@ const VehicleListing: React.FC = () => {
                 <select
                   value={transmission}
                   onChange={(e) => setTransmission(e.target.value)}
-                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm font-medium"
+                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm"
                 >
                   <option value="">All Transmissions</option>
                   {TRANSMISSIONS.map((tr) => (
@@ -311,12 +322,12 @@ const VehicleListing: React.FC = () => {
             </div>
           </aside>
 
-          {/* Right Catalog Listing */}
+          {/* 2. Right Catalog Listing */}
           <section className="lg:col-span-3 space-y-8">
             {loading ? (
               <ListingSkeleton />
             ) : paginatedVehicles.length === 0 ? (
-              <div className="text-center py-24 glass rounded-3xl border border-white/5 space-y-4 bg-[#0d0e12]/30">
+              <div className="text-center py-24 glass rounded-3xl border border-white/5 space-y-4">
                 <h3 className="text-xl font-bold font-['Outfit']">No Matching Vehicles</h3>
                 <p className="text-sm text-slate-500 max-w-sm mx-auto">
                   We couldn't find any vehicles in our database matching your current criteria. Try loosening your filters.
@@ -393,7 +404,7 @@ const VehicleListing: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Filters slide drawer */}
+      {/* 3. Mobile Filters Slide-out Drawer */}
       {showMobileFilters && (
         <div className="fixed inset-0 z-50 flex justify-end lg:hidden animate-fade-in-up">
           <div
@@ -415,6 +426,7 @@ const VehicleListing: React.FC = () => {
                 </button>
               </div>
 
+              {/* Filters Form */}
               <div className="space-y-4 text-sm">
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Make</label>

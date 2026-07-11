@@ -40,11 +40,12 @@ const VehicleDetails: React.FC = () => {
         const primaryImg = getCarImage(response.data.category, response.data.image_url);
         setActiveImage(primaryImg);
 
+        // Mock a gallery by creating slightly different variants using Unsplash query params (or use fallback images)
         setThumbnails([
           primaryImg,
-          `${primaryImg}&auto=format&fit=crop&w=800&q=60&sat=-50`,
-          `${primaryImg}&auto=format&fit=crop&w=800&q=60&hue=180`,
-          `${primaryImg}&auto=format&fit=crop&w=800&q=60&blur=2`,
+          `${primaryImg}&auto=format&fit=crop&w=800&q=60&sat=-50`, // grayscale-ish/darker variant
+          `${primaryImg}&auto=format&fit=crop&w=800&q=60&hue=180`, // different tint
+          `${primaryImg}&auto=format&fit=crop&w=800&q=60&blur=2`, // detailed bokeh
         ]);
       } catch (err: any) {
         console.error('Failed to load vehicle details', err);
@@ -77,6 +78,7 @@ const VehicleDetails: React.FC = () => {
       setVehicle(response.data);
       showToast(`Congratulations! You have purchased the ${vehicle.make} ${vehicle.model}!`, 'success');
 
+      // Save purchase event locally for profile history
       const history = JSON.parse(localStorage.getItem('purchases') || '[]');
       history.push({
         id: vehicle.id,
@@ -151,7 +153,7 @@ const VehicleDetails: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Spec Sheet */}
+          {/* Right Column: Spec Sheet & Actions */}
           <div className="space-y-6">
             <div className="glass p-8 rounded-3xl border border-white/5 space-y-6 bg-[#0d0e12]/60">
               {/* Header Info */}

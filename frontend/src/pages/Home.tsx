@@ -37,7 +37,9 @@ const Home: React.FC = () => {
       try {
         const response = await api.get<Vehicle[]>('/api/vehicles');
         const list = response.data;
+        // Featured vehicles = vehicles with highest price or first few
         setFeaturedVehicles(list.slice(0, 3));
+        // Latest arrivals = sorted by date or first few
         setLatestVehicles(list.slice(0, 6));
       } catch (err) {
         console.error('Failed to load home content', err);
@@ -64,12 +66,13 @@ const Home: React.FC = () => {
 
   return (
     <MainLayout>
-      {/* Hero Section */}
+      {/* 1. Hero Section */}
       <section className="relative min-h-[85vh] flex items-center justify-center bg-cover bg-center select-none overflow-hidden"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(8, 9, 10, 0.4) 0%, rgba(8, 9, 10, 0.7) 60%, rgba(8, 9, 10, 1) 100%), url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1920')`
         }}
       >
+        {/* Glow Element */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-[350px] w-[500px] bg-teal-500/10 blur-[120px] rounded-full z-0" />
 
         <div className="max-w-4xl mx-auto text-center px-6 relative z-10 space-y-8 animate-fade-in-up">
@@ -89,7 +92,7 @@ const Home: React.FC = () => {
             Browse our curated high-performance collection, customize your filters, and secure your purchase instantly.
           </p>
 
-          {/* Search Bar */}
+          {/* Large Search Bar */}
           <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto bg-[#0d0e12]/80 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-full p-2 flex flex-col sm:flex-row gap-2 shadow-2xl">
             <div className="flex-1 flex items-center gap-3 px-4 py-2 sm:py-0">
               <Search className="h-5 w-5 text-teal-400 shrink-0" />
@@ -111,7 +114,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Brands */}
+      {/* 2. Popular Brands Section */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 space-y-8 relative">
         <div className="text-center space-y-1">
           <h2 className="text-2xl font-extrabold text-white tracking-tight">Search by Popular Brands</h2>
@@ -132,7 +135,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Categories */}
+      {/* 3. Category Carousel Section */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 space-y-8">
         <div className="flex justify-between items-end border-b border-white/5 pb-4">
           <div>
@@ -168,7 +171,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Featured Vehicles */}
+      {/* 4. Featured Vehicles (Dynamic) */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 space-y-8 relative">
         <div className="flex justify-between items-end border-b border-white/5 pb-4">
           <div className="flex items-center gap-2">
@@ -203,7 +206,7 @@ const Home: React.FC = () => {
         )}
       </section>
 
-      {/* Trust Banner */}
+      {/* 5. Brand Trust Banner */}
       <section className="bg-gradient-to-r from-teal-950/20 via-slate-900/30 to-cyan-950/20 py-16 border-y border-white/5 my-12">
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           <div className="flex flex-col items-center md:items-start gap-3 p-4">
@@ -238,7 +241,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Latest arrivals */}
+      {/* 6. Latest Arrivals */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 space-y-8 mb-8">
         <div className="flex justify-between items-end border-b border-white/5 pb-4">
           <div className="flex items-center gap-2">

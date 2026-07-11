@@ -62,6 +62,7 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  // Filter listings locally for simple admin lookup
   const filteredVehicles = vehicles.filter(
     (v) =>
       v.make.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -69,6 +70,7 @@ const AdminDashboard: React.FC = () => {
       v.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Compute stat metrics
   const totalFleetValuation = vehicles.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
   const totalPhysicalStock = vehicles.reduce((acc, curr) => acc + curr.quantity, 0);
   const outOfStockModels = vehicles.filter((v) => v.quantity <= 0).length;
@@ -145,6 +147,7 @@ const AdminDashboard: React.FC = () => {
 
             {/* Registry Table */}
             <div className="glass rounded-3xl overflow-hidden border border-white/5 bg-[#0d0e12]/30">
+              {/* Table search filter bar */}
               <div className="p-6 border-b border-white/5 flex flex-col sm:flex-row gap-4 items-center justify-between">
                 <h3 className="text-base font-bold text-white tracking-tight">Fleet Registrations Registry</h3>
                 

@@ -1,6 +1,1 @@
-/* App Specific Styling */
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+/* App.css cleared - custom global styles are in index.css */

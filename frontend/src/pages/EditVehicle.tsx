@@ -212,7 +212,7 @@ const EditVehicle: React.FC = () => {
                   placeholder="e.g. 59900"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-medium"
+                  className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-medium animate-none"
                 />
               </div>
 

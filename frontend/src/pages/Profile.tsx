@@ -18,6 +18,7 @@ const Profile: React.FC = () => {
   const [purchaseHistory, setPurchaseHistory] = useState<LocalPurchase[]>([]);
 
   useEffect(() => {
+    // Load local storage purchase events
     const history = JSON.parse(localStorage.getItem('purchases') || '[]');
     setPurchaseHistory(history);
   }, []);
