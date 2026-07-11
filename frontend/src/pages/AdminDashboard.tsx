@@ -39,13 +39,25 @@ const AdminDashboard: React.FC = () => {
     loadDashboardData();
   }, []);
 
-  const handleRestock = async (id: string) => {
+  const handleUpdateQuantity = async (vehicle: Vehicle, newQuantity: number) => {
+    if (newQuantity < 0) return;
     try {
-      const response = await api.post<Vehicle>(`/api/vehicles/${id}/restock?quantity=10`);
-      setVehicles((prev) => prev.map((v) => (v.id === id ? response.data : v)));
-      showToast('Successfully restocked 10 units!', 'success');
+      const response = await api.put<Vehicle>(`/api/vehicles/${vehicle.id}`, {
+        make: vehicle.make,
+        model: vehicle.model,
+        category: vehicle.category,
+        price: vehicle.price,
+        quantity: newQuantity,
+        year: vehicle.year,
+        fuel_type: vehicle.fuel_type,
+        transmission: vehicle.transmission,
+        description: vehicle.description,
+        image_url: vehicle.image_url,
+      });
+      setVehicles((prev) => prev.map((v) => (v.id === vehicle.id ? response.data : v)));
+      showToast(`Stock updated to ${newQuantity} units.`, 'success');
     } catch (err) {
-      showToast('Restock failed.', 'error');
+      showToast('Failed to update stock.', 'error');
     }
   };
 
@@ -198,22 +210,47 @@ const AdminDashboard: React.FC = () => {
                             ${vehicle.price.toLocaleString()}
                           </td>
                           <td className="py-4 px-6">
-                            <span className={`text-xs ${vehicle.quantity <= 0 ? 'text-rose-600 font-bold' : 'text-slate-600'}`}>
-                              {vehicle.quantity <= 0 ? 'Out of Stock' : `${vehicle.quantity} Units`}
-                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                onClick={() => handleUpdateQuantity(vehicle, vehicle.quantity - 1)}
+                                disabled={vehicle.quantity <= 0}
+                                className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold border border-slate-200/50 disabled:opacity-40 disabled:hover:bg-slate-100 cursor-pointer text-xs"
+                                title="Decrease stock by 1"
+                              >
+                                -
+                              </button>
+                              <span className={`text-xs w-20 text-center font-bold ${vehicle.quantity <= 0 ? 'text-rose-600' : 'text-slate-700'}`}>
+                                {vehicle.quantity <= 0 ? 'Out of Stock' : `${vehicle.quantity} Units`}
+                              </span>
+                              <button
+                                onClick={() => handleUpdateQuantity(vehicle, vehicle.quantity + 1)}
+                                className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold border border-slate-200/50 cursor-pointer text-xs"
+                                title="Increase stock by 1"
+                              >
+                                +
+                              </button>
+                            </div>
                           </td>
                           <td className="py-4 px-6 text-right space-x-2 shrink-0">
                             <button
-                              onClick={() => handleRestock(vehicle.id)}
-                              className="px-2.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200/50 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer inline-flex items-center gap-1"
-                              title="Add 10 units"
+                              onClick={() => handleUpdateQuantity(vehicle, vehicle.quantity - 10)}
+                              disabled={vehicle.quantity < 10}
+                              className="px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/50 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-40 disabled:hover:bg-rose-50"
+                              title="Reduce stock by 10 units"
+                            >
+                              Reduce (-10)
+                            </button>
+                            <button
+                              onClick={() => handleUpdateQuantity(vehicle, vehicle.quantity + 10)}
+                              className="px-2.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200/50 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
+                              title="Restock by 10 units"
                             >
                               Restock (+10)
                             </button>
                             
                             <Link
                               to={`/admin/edit-vehicle/${vehicle.id}`}
-                              className="inline-flex p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-950 border border-slate-200 transition-all"
+                              className="inline-flex p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-950 border border-slate-200 transition-all align-middle"
                               title="Edit Attributes"
                             >
                               <Edit className="h-4 w-4" />
@@ -221,7 +258,7 @@ const AdminDashboard: React.FC = () => {
 
                             <button
                               onClick={() => handleDelete(vehicle.id, `${vehicle.make} ${vehicle.model}`)}
-                              className="p-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 hover:text-rose-700 border border-rose-200/50 transition-all cursor-pointer"
+                              className="p-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 hover:text-rose-700 border border-rose-200/50 transition-all cursor-pointer align-middle"
                               title="Delete Record"
                             >
                               <Trash2 className="h-4 w-4" />
