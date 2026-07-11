@@ -8,6 +8,8 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { getCarImage } from '../components/VehicleCard';
 import { parseVehicleDescription } from '../utils/vehicleHelper';
+import ConfirmationModal from '../components/ConfirmationModal';
+import EmiCalculator from '../components/EmiCalculator';
 import {
   ShoppingBag,
   Calendar,
@@ -19,6 +21,7 @@ import {
   CheckCircle,
   FileText,
   AlertTriangle,
+  Calculator,
 } from 'lucide-react';
 
 const VehicleDetails: React.FC = () => {
@@ -31,6 +34,8 @@ const VehicleDetails: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState('');
   const [thumbnails, setThumbnails] = useState<string[]>([]);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showEmi, setShowEmi] = useState(false);
 
   useEffect(() => {
     const fetchVehicleDetails = async () => {
@@ -79,6 +84,11 @@ const VehicleDetails: React.FC = () => {
       return;
     }
 
+    setShowConfirmation(true);
+  };
+
+  const confirmPurchase = async () => {
+    if (!vehicle) return;
     try {
       const response = await api.post<Vehicle>(`/api/vehicles/${vehicle.id}/purchase`);
       setVehicle(response.data);
@@ -97,6 +107,8 @@ const VehicleDetails: React.FC = () => {
     } catch (err: any) {
       const errorMsg = err.response?.data?.detail || 'Purchase transaction failed.';
       showToast(errorMsg, 'error');
+    } finally {
+      setShowConfirmation(false);
     }
   };
 
@@ -262,7 +274,7 @@ const VehicleDetails: React.FC = () => {
               {/* Purchase Trigger Box */}
               <div className="pt-6 border-t border-slate-100 space-y-3">
                 <button
-                  onClick={handlePurchase}
+                  onClick={() => setShowConfirmation(true)}
                   disabled={isOutOfStock}
                   className={`w-full py-4 text-xs font-bold uppercase tracking-wider rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer border-none ${
                     isOutOfStock
@@ -273,6 +285,15 @@ const VehicleDetails: React.FC = () => {
                   <ShoppingBag className="h-4 w-4" />
                   {isOutOfStock ? 'Out of Stock' : 'Secure Purchase'}
                 </button>
+                {!isOutOfStock && (
+                  <button
+                    onClick={() => setShowEmi(!showEmi)}
+                    className="w-full py-3 text-xs font-bold uppercase tracking-wider rounded-2xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <Calculator className="h-4 w-4" />
+                    {showEmi ? 'Hide EMI Calculator' : 'Calculate EMI'}
+                  </button>
+                )}
                 {isOutOfStock && (
                   <p className="text-[10px] text-center text-slate-500 flex items-center justify-center gap-1.5">
                     <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
@@ -281,6 +302,13 @@ const VehicleDetails: React.FC = () => {
                 )}
               </div>
             </div>
+
+            {/* EMI Calculator */}
+            {showEmi && !isOutOfStock && (
+              <div className="mt-6">
+                <EmiCalculator vehiclePrice={vehicle.price} />
+              </div>
+            )}
           </div>
         </div>
 
@@ -295,6 +323,13 @@ const VehicleDetails: React.FC = () => {
               `The ${vehicle.year} ${vehicle.make} ${vehicle.model} delivers an exceptional combination of modern convenience, safety capabilities, and advanced performance characteristics. Categorized under the ${vehicle.category} segment, this vehicle comes fitted with a high-efficiency ${vehicle.fuel_type} drive layout and a responsive ${vehicle.transmission} gearbox, offering a premium and highly dynamic ride experience. Feel free to contact our Detroit branch to query about custom logs and custom configurations.`}
           </p>
         </section>
+
+        <ConfirmationModal
+          vehicle={vehicle}
+          isOpen={showConfirmation}
+          onClose={() => setShowConfirmation(false)}
+          onConfirm={confirmPurchase}
+        />
       </div>
     </MainLayout>
   );

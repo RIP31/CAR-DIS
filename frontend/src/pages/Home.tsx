@@ -5,6 +5,7 @@ import api from '../services/api';
 import type { Vehicle } from '../types';
 import MainLayout from '../layouts/MainLayout';
 import VehicleCard from '../components/VehicleCard';
+import CallbackForm from '../components/CallbackForm';
 import { CardSkeleton } from '../components/LoadingSkeleton';
 
 const BRANDS = [
@@ -277,6 +278,11 @@ const Home: React.FC = () => {
             ))}
           </div>
         )}
+      </section>
+
+      {/* Callback Request Section */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16">
+        <CallbackForm />
       </section>
     </MainLayout>
   );

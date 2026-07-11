@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Car, User as UserIcon, LogOut, Shield, Menu, X } from 'lucide-react';
+import { useWishlist } from '../context/WishlistContext';
+import { Car, User as UserIcon, LogOut, Shield, Menu, X, Heart } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
+  const { wishlistCount } = useWishlist();
   const navigate = useNavigate();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -69,6 +71,20 @@ const Navbar: React.FC = () => {
               My Profile
             </Link>
           )}
+
+          <Link
+            to="/wishlist"
+            className={`relative transition-colors ${
+              isActive('/wishlist') ? 'text-blue-600 font-bold' : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Heart className="h-4 w-4" />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
 
           {user?.role === 'ADMIN' && (
             <Link
@@ -162,6 +178,18 @@ const Navbar: React.FC = () => {
                 My Profile
               </Link>
             )}
+            <Link
+              to="/wishlist"
+              className={`py-2 border-b border-slate-100 flex items-center gap-1.5 ${
+                isActive('/wishlist') ? 'text-blue-600 font-bold' : 'text-slate-600'
+              }`}
+            >
+              <Heart className="h-4 w-4" />
+              Wishlist
+              {wishlistCount > 0 && (
+                <span className="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{wishlistCount}</span>
+              )}
+            </Link>
             {user?.role === 'ADMIN' && (
               <Link
                 to="/admin"

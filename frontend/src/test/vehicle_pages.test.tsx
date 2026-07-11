@@ -124,6 +124,11 @@ describe('VehicleDetails Page', () => {
       purchaseBtn.click();
     });
 
+    const confirmBtn = screen.getByRole('button', { name: /confirm purchase/i });
+    await act(async () => {
+      confirmBtn.click();
+    });
+
     expect(api.post).toHaveBeenCalledWith('/api/vehicles/v-1/purchase');
     expect(mockShowToast).toHaveBeenCalledWith(
       'Congratulations! You have purchased the Ford Explorer!',

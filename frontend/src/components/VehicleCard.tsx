@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Eye, Calendar, Settings, AlertCircle } from 'lucide-react';
+import { ShoppingBag, Eye, Calendar, Settings, AlertCircle, Heart } from 'lucide-react';
 import type { Vehicle } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useWishlist } from '../context/WishlistContext';
 import api from '../services/api';
 import { parseVehicleDescription } from '../utils/vehicleHelper';
 
@@ -37,7 +38,30 @@ export const getCarImage = (category: string, userUrl?: string) => {
 const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }) => {
   const { user } = useAuth();
   const { showToast } = useToast();
+  const { toggleWishlist, isInWishlist, refreshWishlist } = useWishlist();
   const navigate = useNavigate();
+
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const inWishlist = isInWishlist(vehicle.id);
+
+  const handleWishlistToggle = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      showToast('Please sign in to add to wishlist', 'warning');
+      navigate('/login');
+      return;
+    }
+    try {
+      setWishlistLoading(true);
+      await toggleWishlist(vehicle.id);
+      await refreshWishlist();
+    } catch (err: any) {
+      showToast(err.response?.data?.detail || 'Wishlist update failed.', 'error');
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
 
   const handlePurchase = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -137,6 +161,16 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
+        {user && (
+          <button
+            onClick={handleWishlistToggle}
+            disabled={wishlistLoading}
+            className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur rounded-full border border-slate-200 hover:bg-white transition-colors cursor-pointer z-10 disabled:opacity-50"
+            title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+          >
+            <Heart className={`h-4 w-4 ${inWishlist ? 'text-rose-500 fill-rose-500' : 'text-slate-400'}`} />
+          </button>
+        )}
       </Link>
 
       {/* Specifications */}
