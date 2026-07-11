@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { UserPlus, User, Mail, Lock, AlertCircle, ShieldCheck, Car, ArrowLeft } from 'lucide-react';
+import { UserPlus, User, Mail, Lock, AlertCircle, Car, ArrowLeft } from 'lucide-react';
 
 const Register: React.FC = () => {
   const { register, login } = useAuth();
@@ -129,37 +129,6 @@ const Register: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 pl-12 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-blue-600/30"
                 />
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
-                Account Role
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setRole('USER')}
-                  className={`py-3 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                    role === 'USER'
-                      ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                      : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-                  }`}
-                >
-                  Standard User
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRole('ADMIN')}
-                  className={`py-3 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                    role === 'ADMIN'
-                      ? 'bg-rose-50 text-rose-600 border-rose-200 shadow-sm font-bold'
-                      : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-                  }`}
-                >
-                  <ShieldCheck className="h-4 w-4" />
-                  Admin
-                </button>
               </div>
             </div>
 
