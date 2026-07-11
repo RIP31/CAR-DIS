@@ -14,10 +14,16 @@ class PurchaseResponse(BaseModel):
 
     id: str
     user_id: str
+    customer_name: str
+    customer_email: str
     vehicle_id: str | None
     vehicle_name: str
+    manufacturer: str
+    model: str
+    variant: str
     purchase_price: float
     quantity: int
+    invoice_number: str
     status: PurchaseStatus
     purchase_date: datetime
     created_at: datetime

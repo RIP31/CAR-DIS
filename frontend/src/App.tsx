@@ -10,10 +10,12 @@ import Register from './pages/Register';
 import VehicleListing from './pages/VehicleListing';
 import VehicleDetails from './pages/VehicleDetails';
 import Profile from './pages/Profile';
+import MyPurchases from './pages/MyPurchases';
 import Wishlist from './pages/Wishlist';
 import Compare from './pages/Compare';
 import Invoice from './pages/Invoice';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminPurchases from './pages/AdminPurchases';
 import AddVehicle from './pages/AddVehicle';
 import EditVehicle from './pages/EditVehicle';
 import NotFound from './pages/NotFound';
@@ -45,6 +47,14 @@ function App() {
                   }
                 />
                 <Route
+                  path="/my-purchases"
+                  element={
+                    <ProtectedRoute>
+                      <MyPurchases />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/invoice/:purchaseId"
                   element={
                     <ProtectedRoute>
@@ -59,6 +69,14 @@ function App() {
                   element={
                     <ProtectedRoute requiredRole="ADMIN">
                       <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/purchases"
+                  element={
+                    <ProtectedRoute requiredRole="ADMIN">
+                      <AdminPurchases />
                     </ProtectedRoute>
                   }
                 />

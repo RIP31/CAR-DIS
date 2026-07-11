@@ -7,9 +7,9 @@ from app.models.user import User
 from app.schemas.purchase import PurchaseCreate, PurchaseResponse, PurchaseStatusUpdate
 from app.services.purchase_service import PurchaseService
 
-router = APIRouter(prefix="/api/purchases", tags=["Purchases"])
+router = APIRouter(tags=["Purchases"])
 
-@router.post("", response_model=PurchaseResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/api/purchases", response_model=PurchaseResponse, status_code=status.HTTP_201_CREATED)
 def create_purchase(
     payload: PurchaseCreate,
     db: Session = Depends(get_db),
@@ -18,7 +18,7 @@ def create_purchase(
     purchase = PurchaseService(db).create_purchase(current_user.id, payload)
     return PurchaseResponse.model_validate(purchase)
 
-@router.get("/my", response_model=list[PurchaseResponse])
+@router.get("/api/purchases/my-purchases", response_model=list[PurchaseResponse])
 def get_my_purchases(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -26,22 +26,44 @@ def get_my_purchases(
     purchases = PurchaseService(db).get_user_purchases(current_user.id)
     return [PurchaseResponse.model_validate(p) for p in purchases]
 
-@router.get("", response_model=list[PurchaseResponse])
-def get_all_purchases(
+@router.get("/api/purchases/{purchaseId}", response_model=PurchaseResponse)
+def get_purchase(
+    purchaseId: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> PurchaseResponse:
+    service = PurchaseService(db)
+    purchase = service.get_purchase(purchaseId)
+    if not purchase:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Purchase not found",
+        )
+    # Check authorization: user can only view their own purchases, admin can view all
+    if current_user.role != "ADMIN" and purchase.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access forbidden to this purchase",
+        )
+    return PurchaseResponse.model_validate(purchase)
+
+# Admin endpoints
+@router.get("/api/admin/purchases", response_model=list[PurchaseResponse])
+def get_admin_purchases(
     db: Session = Depends(get_db),
     _current_admin: User = Depends(get_current_admin),
 ) -> list[PurchaseResponse]:
     purchases = PurchaseService(db).get_all_purchases()
     return [PurchaseResponse.model_validate(p) for p in purchases]
 
-@router.get("/{purchase_id}", response_model=PurchaseResponse)
-def get_purchase(
-    purchase_id: str,
+@router.get("/api/admin/purchases/{purchaseId}", response_model=PurchaseResponse)
+def get_admin_purchase(
+    purchaseId: str,
     db: Session = Depends(get_db),
-    _current_user: User = Depends(get_current_user),
+    _current_admin: User = Depends(get_current_admin),
 ) -> PurchaseResponse:
     service = PurchaseService(db)
-    purchase = service.get_purchase(purchase_id)
+    purchase = service.get_purchase(purchaseId)
     if not purchase:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -49,12 +71,12 @@ def get_purchase(
         )
     return PurchaseResponse.model_validate(purchase)
 
-@router.patch("/{purchase_id}/status", response_model=PurchaseResponse)
+@router.patch("/api/admin/purchases/{purchaseId}/status", response_model=PurchaseResponse)
 def update_purchase_status(
-    purchase_id: str,
+    purchaseId: str,
     payload: PurchaseStatusUpdate,
     db: Session = Depends(get_db),
     _current_admin: User = Depends(get_current_admin),
 ) -> PurchaseResponse:
-    purchase = PurchaseService(db).update_status(purchase_id, payload)
+    purchase = PurchaseService(db).update_status(purchaseId, payload)
     return PurchaseResponse.model_validate(purchase)

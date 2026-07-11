@@ -129,7 +129,10 @@ describe('VehicleDetails Page', () => {
       confirmBtn.click();
     });
 
-    expect(api.post).toHaveBeenCalledWith('/api/vehicles/v-1/purchase');
+    expect(api.post).toHaveBeenCalledWith('/api/purchases', {
+      vehicle_id: 'v-1',
+      quantity: 1,
+    });
     expect(mockShowToast).toHaveBeenCalledWith(
       'Congratulations! You have purchased the Ford Explorer!',
       'success'

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Eye, Calendar, Settings, AlertCircle, Heart } from 'lucide-react';
-import type { Vehicle } from '../types';
+import type { Vehicle, Purchase } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useWishlist } from '../context/WishlistContext';
 import api from '../services/api';
 import { parseVehicleDescription } from '../utils/vehicleHelper';
+import ConfirmationModal from './ConfirmationModal';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -63,7 +64,10 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
     }
   };
 
-  const handlePurchase = async (e: React.MouseEvent) => {
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [purchaseLoading, setPurchaseLoading] = useState(false);
+
+  const handlePurchase = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -78,28 +82,29 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
       return;
     }
 
-    try {
-      const response = await api.post<Vehicle>(`/api/vehicles/${vehicle.id}/purchase`);
-      showToast(`Successfully purchased ${vehicle.make} ${vehicle.model}!`, 'success');
-      
-      // Save purchase event locally for profile mapping
-      const history = JSON.parse(localStorage.getItem('purchases') || '[]');
-      history.push({
-        id: vehicle.id,
-        make: vehicle.make,
-        model: vehicle.model,
-        price: vehicle.price,
-        year: vehicle.year,
-        date: new Date().toISOString(),
-      });
-      localStorage.setItem('purchases', JSON.stringify(history));
+    setShowConfirm(true);
+  };
 
+  const confirmPurchase = async () => {
+    try {
+      setPurchaseLoading(true);
+      await api.post<Purchase>('/api/purchases', {
+        vehicle_id: vehicle.id,
+        quantity: 1,
+      });
+      showToast(`Successfully purchased ${vehicle.make} ${vehicle.model}!`, 'success');
+
+      // Fetch updated vehicle object to update stock count in catalog UI
+      const updatedVehicleRes = await api.get<Vehicle>(`/api/vehicles/${vehicle.id}`);
       if (onUpdate) {
-        onUpdate(response.data);
+        onUpdate(updatedVehicleRes.data);
       }
     } catch (err: any) {
       const errorMsg = err.response?.data?.detail || 'Purchase failed. Please try again.';
       showToast(errorMsg, 'error');
+    } finally {
+      setPurchaseLoading(false);
+      setShowConfirm(false);
     }
   };
 
@@ -269,6 +274,14 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
           )}
         </div>
       </div>
+
+      <ConfirmationModal
+        vehicle={vehicle}
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmPurchase}
+        loading={purchaseLoading}
+      />
     </div>
   );
 };

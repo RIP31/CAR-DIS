@@ -40,10 +40,10 @@ const Invoice: React.FC = () => {
           <FileText className="h-16 w-16 text-slate-300 mx-auto" />
           <h2 className="text-lg font-bold text-slate-700">Invoice not found</h2>
           <Link
-            to="/profile"
+            to={user?.role === 'ADMIN' ? '/admin/purchases' : '/my-purchases'}
             className="text-sm text-blue-600 hover:text-blue-700 font-semibold"
           >
-            Back to Profile
+            {user?.role === 'ADMIN' ? 'Back to Sales Dashboard' : 'Back to Purchases'}
           </Link>
         </div>
       </div>
@@ -57,11 +57,11 @@ const Invoice: React.FC = () => {
       {/* Print Controls (hidden in print) */}
       <div className="max-w-3xl mx-auto mb-6 flex items-center justify-between print:hidden">
         <Link
-          to="/profile"
+          to={user?.role === 'ADMIN' ? '/admin/purchases' : '/my-purchases'}
           className="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-slate-500 hover:text-slate-900 transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
-          Back to Profile
+          {user?.role === 'ADMIN' ? 'Back to Sales Dashboard' : 'Back to Purchases'}
         </Link>
         <button
           onClick={() => window.print()}
@@ -86,7 +86,7 @@ const Invoice: React.FC = () => {
             </div>
             <div className="text-right space-y-1">
               <h2 className="text-2xl font-extrabold tracking-tight">INVOICE</h2>
-              <p className="text-xs text-slate-400 font-mono">#{purchase.id.slice(0, 8).toUpperCase()}</p>
+              <p className="text-xs text-slate-400 font-mono">{purchase.invoice_number}</p>
             </div>
           </div>
         </div>

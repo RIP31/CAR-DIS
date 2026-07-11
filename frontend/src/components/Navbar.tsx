@@ -62,14 +62,24 @@ const Navbar: React.FC = () => {
           </Link>
 
           {user && (
-            <Link
-              to="/profile"
-              className={`transition-colors ${
-                isActive('/profile') ? 'text-blue-600 font-bold' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              My Profile
-            </Link>
+            <>
+              <Link
+                to="/profile"
+                className={`transition-colors ${
+                  isActive('/profile') ? 'text-blue-600 font-bold' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                My Profile
+              </Link>
+              <Link
+                to="/my-purchases"
+                className={`transition-colors ${
+                  isActive('/my-purchases') ? 'text-blue-600 font-bold' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                My Purchases
+              </Link>
+            </>
           )}
 
           <Link
@@ -87,15 +97,25 @@ const Navbar: React.FC = () => {
           </Link>
 
           {user?.role === 'ADMIN' && (
-            <Link
-              to="/admin"
-              className={`flex items-center gap-1 text-rose-600 hover:text-rose-700 transition-colors font-bold uppercase text-xs tracking-wider border border-rose-200 bg-rose-50 px-2.5 py-1 rounded-full ${
-                isActive('/admin') ? 'ring-1 ring-rose-500/30' : ''
-              }`}
-            >
-              <Shield className="h-3.5 w-3.5" />
-              Admin Portal
-            </Link>
+            <>
+              <Link
+                to="/admin"
+                className={`flex items-center gap-1 text-rose-600 hover:text-rose-700 transition-colors font-bold uppercase text-xs tracking-wider border border-rose-200 bg-rose-50 px-2.5 py-1 rounded-full ${
+                  isActive('/admin') ? 'ring-1 ring-rose-500/30' : ''
+                }`}
+              >
+                <Shield className="h-3.5 w-3.5" />
+                Admin Portal
+              </Link>
+              <Link
+                to="/admin/purchases"
+                className={`flex items-center gap-1 text-rose-600 hover:text-rose-700 transition-colors font-bold uppercase text-xs tracking-wider border border-rose-200 bg-rose-50 px-2.5 py-1 rounded-full ${
+                  isActive('/admin/purchases') ? 'ring-1 ring-rose-500/30' : ''
+                }`}
+              >
+                Sales Log
+              </Link>
+            </>
           )}
         </div>
 
@@ -169,14 +189,24 @@ const Navbar: React.FC = () => {
               Browse Inventory
             </Link>
             {user && (
-              <Link
-                to="/profile"
-                className={`py-2 border-b border-slate-100 ${
-                  isActive('/profile') ? 'text-blue-600 font-bold' : 'text-slate-600'
-                }`}
-              >
-                My Profile
-              </Link>
+              <>
+                <Link
+                  to="/profile"
+                  className={`py-2 border-b border-slate-100 ${
+                    isActive('/profile') ? 'text-blue-600 font-bold' : 'text-slate-600'
+                  }`}
+                >
+                  My Profile
+                </Link>
+                <Link
+                  to="/my-purchases"
+                  className={`py-2 border-b border-slate-100 ${
+                    isActive('/my-purchases') ? 'text-blue-600 font-bold' : 'text-slate-600'
+                  }`}
+                >
+                  My Purchases
+                </Link>
+              </>
             )}
             <Link
               to="/wishlist"
@@ -191,13 +221,22 @@ const Navbar: React.FC = () => {
               )}
             </Link>
             {user?.role === 'ADMIN' && (
-              <Link
-                to="/admin"
-                className="py-2 border-b border-slate-100 text-rose-600 font-bold flex items-center gap-1.5"
-              >
-                <Shield className="h-4 w-4" />
-                Admin Dashboard
-              </Link>
+              <>
+                <Link
+                  to="/admin"
+                  className="py-2 border-b border-slate-100 text-rose-600 font-bold flex items-center gap-1.5"
+                >
+                  <Shield className="h-4 w-4" />
+                  Admin Dashboard
+                </Link>
+                <Link
+                  to="/admin/purchases"
+                  className="py-2 border-b border-slate-100 text-rose-600 font-bold flex items-center gap-1.5"
+                >
+                  <Shield className="h-4 w-4" />
+                  Sales Log
+                </Link>
+              </>
             )}
           </div>
 

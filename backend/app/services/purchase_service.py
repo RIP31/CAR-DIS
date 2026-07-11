@@ -1,8 +1,12 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
+import json
+import uuid
+from datetime import datetime, timezone
 from app.models.purchase import Purchase, PurchaseStatus
 from app.repositories.purchase_repository import PurchaseRepository
 from app.repositories.vehicle_repository import VehicleRepository
+from app.repositories.user_repository import UserRepository
 from app.schemas.purchase import PurchaseCreate, PurchaseStatusUpdate
 
 class PurchaseService:
@@ -10,8 +14,15 @@ class PurchaseService:
         self.db = db
         self.repository = PurchaseRepository(db)
         self.vehicle_repository = VehicleRepository(db)
+        self.user_repository = UserRepository(db)
 
     def create_purchase(self, user_id: str, payload: PurchaseCreate) -> Purchase:
+        user = self.user_repository.get_user_by_id(user_id)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
+            )
         vehicle = self.vehicle_repository.get_vehicle(payload.vehicle_id)
         if not vehicle:
             raise HTTPException(
@@ -23,13 +34,30 @@ class PurchaseService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Vehicle out of stock",
             )
+        
+        variant = "Standard"
+        if vehicle.description:
+            try:
+                desc_data = json.loads(vehicle.description)
+                variant = desc_data.get("variant") or "Standard"
+            except Exception:
+                pass
+
+        invoice_number = f"INV-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{uuid.uuid4().hex[:6].upper()}"
+
         vehicle.quantity -= payload.quantity
         purchase = self.repository.create_purchase(
             user_id=user_id,
+            customer_name=user.name,
+            customer_email=user.email,
             vehicle_id=vehicle.id,
             vehicle_name=f"{vehicle.make} {vehicle.model}",
+            manufacturer=vehicle.make,
+            model=vehicle.model,
+            variant=variant,
             purchase_price=vehicle.price * payload.quantity,
             quantity=payload.quantity,
+            invoice_number=invoice_number,
         )
         return purchase
 

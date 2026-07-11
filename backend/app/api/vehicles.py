@@ -92,15 +92,16 @@ def delete_vehicle(
 def purchase_vehicle(
     vehicle_id: str,
     db: Session = Depends(get_db),
-    _current_user=Depends(get_current_user),
+    current_user=Depends(get_current_user),
 ) -> VehicleResponse:
+    from app.services.purchase_service import PurchaseService
+    from app.schemas.purchase import PurchaseCreate
+    
+    # Create persistent DB purchase record (handles stock decrement and validations)
+    PurchaseService(db).create_purchase(current_user.id, PurchaseCreate(vehicle_id=vehicle_id, quantity=1))
+    
     service = VehicleService(db)
     vehicle = _get_vehicle_or_404(service, vehicle_id)
-    if vehicle.quantity <= 0:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Vehicle out of stock")
-    vehicle.quantity -= 1
-    db.commit()
-    db.refresh(vehicle)
     return VehicleResponse.model_validate(vehicle)
 
 @router.post("/{vehicle_id}/restock", response_model=VehicleResponse)

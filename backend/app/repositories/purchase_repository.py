@@ -10,17 +10,29 @@ class PurchaseRepository:
         self,
         *,
         user_id: str,
+        customer_name: str,
+        customer_email: str,
         vehicle_id: str,
         vehicle_name: str,
+        manufacturer: str,
+        model: str,
+        variant: str,
         purchase_price: float,
         quantity: int = 1,
+        invoice_number: str,
     ) -> Purchase:
         purchase = Purchase(
             user_id=user_id,
+            customer_name=customer_name,
+            customer_email=customer_email,
             vehicle_id=vehicle_id,
             vehicle_name=vehicle_name,
+            manufacturer=manufacturer,
+            model=model,
+            variant=variant,
             purchase_price=purchase_price,
             quantity=quantity,
+            invoice_number=invoice_number,
         )
         self.db.add(purchase)
         self.db.commit()

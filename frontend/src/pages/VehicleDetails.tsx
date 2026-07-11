@@ -90,20 +90,15 @@ const VehicleDetails: React.FC = () => {
   const confirmPurchase = async () => {
     if (!vehicle) return;
     try {
-      const response = await api.post<Vehicle>(`/api/vehicles/${vehicle.id}/purchase`);
-      setVehicle(response.data);
+      await api.post<Purchase>('/api/purchases', {
+        vehicle_id: vehicle.id,
+        quantity: 1,
+      });
       showToast(`Congratulations! You have purchased the ${vehicle.make} ${vehicle.model}!`, 'success');
 
-      const history = JSON.parse(localStorage.getItem('purchases') || '[]');
-      history.push({
-        id: vehicle.id,
-        make: vehicle.make,
-        model: vehicle.model,
-        price: vehicle.price,
-        year: vehicle.year,
-        date: new Date().toISOString(),
-      });
-      localStorage.setItem('purchases', JSON.stringify(history));
+      // Fetch updated vehicle to reflect stock changes in details view
+      const updatedVehicleRes = await api.get<Vehicle>(`/api/vehicles/${vehicle.id}`);
+      setVehicle(updatedVehicleRes.data);
     } catch (err: any) {
       const errorMsg = err.response?.data?.detail || 'Purchase transaction failed.';
       showToast(errorMsg, 'error');

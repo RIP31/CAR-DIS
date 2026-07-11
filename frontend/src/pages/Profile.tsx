@@ -27,7 +27,7 @@ const Profile: React.FC = () => {
       if (!user) return;
       setLoading(true);
       try {
-        const response = await api.get<Purchase[]>('/api/purchases/my');
+        const response = await api.get<Purchase[]>('/api/purchases/my-purchases');
         setPurchases(response.data);
       } catch (err: any) {
         showToast(err.response?.data?.detail || 'Failed to load purchases', 'error');
