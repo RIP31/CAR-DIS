@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, ShoppingBag, AlertTriangle } from 'lucide-react';
 import type { Vehicle } from '../types';
 import { getCarImage } from './VehicleCard';
@@ -24,7 +25,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   const { variant, images } = parseVehicleDescription(vehicle.description, vehicle.model, vehicle.image_url);
   const imageUrl = images[0] || getCarImage(vehicle.category, vehicle.image_url);
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
@@ -125,7 +126,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
