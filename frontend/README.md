@@ -3,11 +3,15 @@
 ## Environment
 
 ```text
-Current time: 2026-07-11T11:29:45+05:30
+Current time: 2026-07-11T11:41:04+05:30
 Working directory: D:\ridham\DDU\Incubyte\Project\CAR-DIS\frontend
 Workspace root folder: D:\ridham\DDU\Incubyte\Project
 AI / Editor: Kilo (kilo.ai)
 ```
+
+## Frontend Development
+
+The frontend was initially scaffolded using **Antigravity AI**. I customized, tested, and integrated it with the backend, while **Kilo Code** assisted in fixing API mismatches, runtime issues, and refining the implementation.
 
 ## Stack
 
