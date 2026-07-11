@@ -7,6 +7,7 @@ import { DetailsSkeleton } from '../components/LoadingSkeleton';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { getCarImage } from '../components/VehicleCard';
+import { parseVehicleDescription } from '../utils/vehicleHelper';
 import {
   ShoppingBag,
   Calendar,
@@ -37,15 +38,21 @@ const VehicleDetails: React.FC = () => {
       try {
         const response = await api.get<Vehicle>(`/api/vehicles/${id}`);
         setVehicle(response.data);
-        const primaryImg = getCarImage(response.data.category, response.data.image_url);
+        
+        const parsed = parseVehicleDescription(response.data.description, response.data.model, response.data.image_url);
+        const primaryImg = parsed.images[0] || getCarImage(response.data.category, response.data.image_url);
         setActiveImage(primaryImg);
 
-        setThumbnails([
-          primaryImg,
-          `${primaryImg}&auto=format&fit=crop&w=800&q=60&sat=-50`,
-          `${primaryImg}&auto=format&fit=crop&w=800&q=60&hue=180`,
-          `${primaryImg}&auto=format&fit=crop&w=800&q=60&blur=2`,
-        ]);
+        if (parsed.images.length > 1) {
+          setThumbnails(parsed.images);
+        } else {
+          setThumbnails([
+            primaryImg,
+            `${primaryImg}&auto=format&fit=crop&w=800&q=60&sat=-50`,
+            `${primaryImg}&auto=format&fit=crop&w=800&q=60&hue=180`,
+            `${primaryImg}&auto=format&fit=crop&w=800&q=60&blur=2`,
+          ]);
+        }
       } catch (err: any) {
         console.error('Failed to load vehicle details', err);
         showToast('Vehicle not found', 'error');
@@ -103,6 +110,7 @@ const VehicleDetails: React.FC = () => {
 
   if (!vehicle) return null;
 
+  const { variant, mileage, engine_capacity, color, descriptionText } = parseVehicleDescription(vehicle.description, vehicle.model, vehicle.image_url);
   const isOutOfStock = vehicle.quantity <= 0;
 
   return (
@@ -169,6 +177,11 @@ const VehicleDetails: React.FC = () => {
                 <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight pt-1">
                   {vehicle.make} {vehicle.model}
                 </h1>
+                {variant && variant !== 'Standard' && (
+                  <p className="text-md font-semibold text-slate-500 mt-1">
+                    {variant}
+                  </p>
+                )}
                 
                 <p className="text-3xl font-extrabold text-blue-600 font-['Outfit'] pt-1">
                   ${vehicle.price.toLocaleString()}
@@ -204,6 +217,27 @@ const VehicleDetails: React.FC = () => {
                     <span className="text-slate-800 flex items-center gap-1.5">
                       <Fuel className="h-4 w-4 text-blue-600/60" />
                       {vehicle.fuel_type}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center py-0.5">
+                    <span className="text-slate-500 font-normal">Mileage</span>
+                    <span className="text-slate-800">
+                      {mileage > 0 ? `${mileage.toLocaleString()} km` : '0 km'}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center py-0.5">
+                    <span className="text-slate-500 font-normal">Engine Capacity</span>
+                    <span className="text-slate-800">
+                      {engine_capacity}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center py-0.5">
+                    <span className="text-slate-500 font-normal">Exterior Color</span>
+                    <span className="text-slate-800">
+                      {color}
                     </span>
                   </div>
 
@@ -257,7 +291,7 @@ const VehicleDetails: React.FC = () => {
             Detailed Description
           </h3>
           <p className="text-slate-600 leading-relaxed font-normal text-sm max-w-4xl">
-            {vehicle.description ||
+            {descriptionText ||
               `The ${vehicle.year} ${vehicle.make} ${vehicle.model} delivers an exceptional combination of modern convenience, safety capabilities, and advanced performance characteristics. Categorized under the ${vehicle.category} segment, this vehicle comes fitted with a high-efficiency ${vehicle.fuel_type} drive layout and a responsive ${vehicle.transmission} gearbox, offering a premium and highly dynamic ride experience. Feel free to contact our Detroit branch to query about custom logs and custom configurations.`}
           </p>
         </section>

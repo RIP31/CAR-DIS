@@ -7,9 +7,11 @@ import VehicleCard from '../components/VehicleCard';
 import { ListingSkeleton } from '../components/LoadingSkeleton';
 import { SlidersHorizontal, ArrowUpDown, X, Grid, List, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const CATEGORIES = ['SUV', 'Sedan', 'Coupe', 'Sports', 'Convertible', 'Truck', 'Hatchback', 'EV', 'Luxury'];
-const FUEL_TYPES = ['Gasoline', 'Diesel', 'Electric', 'Hybrid'];
-const TRANSMISSIONS = ['Automatic', 'Manual', 'Semi-Automatic'];
+import { parseVehicleDescription } from '../utils/vehicleHelper';
+
+const CATEGORIES = ['SUV', 'Sedan', 'Coupe', 'Hatchback', 'EV', 'Luxury', 'Pickup'];
+const FUEL_TYPES = ['Petrol', 'Diesel', 'Hybrid', 'Electric'];
+const TRANSMISSIONS = ['Automatic', 'Manual'];
 
 const VehicleListing: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,13 +23,15 @@ const VehicleListing: React.FC = () => {
   // Sidebar Filter States (prefilled from URL if exists)
   const [make, setMake] = useState(searchParams.get('make') || '');
   const [model, setModel] = useState(searchParams.get('model') || '');
+  const [variant, setVariant] = useState(searchParams.get('variant') || '');
   const [category, setCategory] = useState(searchParams.get('category') || '');
   const [minPrice, setMinPrice] = useState(searchParams.get('min_price') || '');
   const [maxPrice, setMaxPrice] = useState(searchParams.get('max_price') || '');
   const [year, setYear] = useState(searchParams.get('year') || '');
   const [fuelType, setFuelType] = useState(searchParams.get('fuel_type') || '');
   const [transmission, setTransmission] = useState(searchParams.get('transmission') || '');
-  const [sortBy, setSortBy] = useState('newest'); // price_asc, price_desc, newest, make_asc
+  const [inStockOnly, setInStockOnly] = useState(searchParams.get('in_stock') === 'true');
+  const [sortBy, setSortBy] = useState('newest'); // price_asc, price_desc, newest, oldest, latest
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,28 +56,48 @@ const VehicleListing: React.FC = () => {
 
       let response;
       if (Object.keys(params).length > 0 || searchQuery) {
+        const queryParams = { ...params };
         if (searchQuery) {
-          params.make = searchQuery; 
+          queryParams.model = searchQuery;
         }
-        response = await api.get<Vehicle[]>('/api/vehicles/search', { params });
+        response = await api.get<Vehicle[]>('/api/vehicles/search', { params: queryParams });
+        
+        // Fallback to searching by make if empty
+        if (response.data.length === 0 && searchQuery) {
+          const altParams = { ...params, make: searchQuery };
+          response = await api.get<Vehicle[]>('/api/vehicles/search', { params: altParams });
+        }
       } else {
         response = await api.get<Vehicle[]>('/api/vehicles');
       }
 
       let data = response.data;
 
-      // Handle search query locally as fallback if make search was too specific
+      // Local refinement: search query matching make, model, or variant
       if (searchQuery) {
         const query = searchQuery.toLowerCase().trim();
-        const filtered = response.data.filter(
-          (v) =>
+        data = data.filter((v) => {
+          const parsed = parseVehicleDescription(v.description, v.model, v.image_url);
+          return (
             v.make.toLowerCase().includes(query) ||
             v.model.toLowerCase().includes(query) ||
-            v.category.toLowerCase().includes(query)
-        );
-        if (filtered.length > 0) {
-          data = filtered;
-        }
+            parsed.variant.toLowerCase().includes(query)
+          );
+        });
+      }
+
+      // Local refinement: Variant filter
+      if (variant) {
+        const variantQuery = variant.toLowerCase().trim();
+        data = data.filter((v) => {
+          const parsed = parseVehicleDescription(v.description, v.model, v.image_url);
+          return parsed.variant.toLowerCase().includes(variantQuery);
+        });
+      }
+
+      // Local refinement: Availability filter (In Stock Only)
+      if (inStockOnly) {
+        data = data.filter((v) => v.quantity > 0);
       }
 
       setVehicles(data);
@@ -87,7 +111,7 @@ const VehicleListing: React.FC = () => {
 
   useEffect(() => {
     fetchInventory();
-  }, [searchParams, make, model, category, minPrice, maxPrice, year, fuelType, transmission]);
+  }, [searchParams, make, model, variant, category, minPrice, maxPrice, year, fuelType, transmission, inStockOnly]);
 
   // Handle Sort
   const getSortedVehicles = () => {
@@ -97,9 +121,15 @@ const VehicleListing: React.FC = () => {
         return list.sort((a, b) => a.price - b.price);
       case 'price_desc':
         return list.sort((a, b) => b.price - a.price);
+      case 'year_desc':
       case 'newest':
         return list.sort((a, b) => b.year - a.year);
-      case 'make_asc':
+      case 'year_asc':
+      case 'oldest':
+        return list.sort((a, b) => a.year - b.year);
+      case 'latest':
+        // Sort by id / created_at descending (latest added first)
+        return list.sort((a, b) => b.id.localeCompare(a.id));
       default:
         return list.sort((a, b) => a.make.localeCompare(b.make));
     }
@@ -117,12 +147,14 @@ const VehicleListing: React.FC = () => {
   const handleClearFilters = () => {
     setMake('');
     setModel('');
+    setVariant('');
     setCategory('');
     setMinPrice('');
     setMaxPrice('');
     setYear('');
     setFuelType('');
     setTransmission('');
+    setInStockOnly(false);
     setSearchParams({});
   };
 
@@ -177,10 +209,11 @@ const VehicleListing: React.FC = () => {
                 onChange={(e) => setSortBy(e.target.value)}
                 className="bg-transparent text-slate-800 outline-none border-none cursor-pointer pr-4"
               >
-                <option value="newest">Year: Newest</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
-                <option value="make_asc">Make: Alphabetical</option>
+                <option value="latest">Latest Added</option>
+                <option value="price_asc">Price: Low → High</option>
+                <option value="price_desc">Price: High → Low</option>
+                <option value="newest">Newest Model Year</option>
+                <option value="oldest">Oldest Model Year</option>
               </select>
             </div>
 
@@ -220,7 +253,7 @@ const VehicleListing: React.FC = () => {
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Manufacturer (Make)</label>
                 <input
                   type="text"
-                  placeholder="e.g. Toyota"
+                  placeholder="e.g. BMW"
                   value={make}
                   onChange={(e) => setMake(e.target.value)}
                   className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm"
@@ -229,12 +262,24 @@ const VehicleListing: React.FC = () => {
 
               {/* Model Input */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Model Variant</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Model</label>
                 <input
                   type="text"
-                  placeholder="e.g. Camry"
+                  placeholder="e.g. X5"
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm"
+                />
+              </div>
+
+              {/* Variant Input */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Variant / Trim</label>
+                <input
+                  type="text"
+                  placeholder="e.g. xDrive40i"
+                  value={variant}
+                  onChange={(e) => setVariant(e.target.value)}
                   className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm"
                 />
               </div>
@@ -315,6 +360,20 @@ const VehicleListing: React.FC = () => {
                     <option key={tr} value={tr}>{tr}</option>
                   ))}
                 </select>
+              </div>
+
+              {/* AvailabilityCheckbox */}
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  id="inStockOnly"
+                  type="checkbox"
+                  checked={inStockOnly}
+                  onChange={(e) => setInStockOnly(e.target.checked)}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
+                />
+                <label htmlFor="inStockOnly" className="text-xs font-semibold text-slate-700 cursor-pointer select-none">
+                  In Stock Only
+                </label>
               </div>
             </div>
           </aside>
@@ -429,7 +488,7 @@ const VehicleListing: React.FC = () => {
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Make</label>
                   <input
                     type="text"
-                    placeholder="e.g. Tesla"
+                    placeholder="e.g. BMW"
                     value={make}
                     onChange={(e) => setMake(e.target.value)}
                     className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm focus:border-blue-600/30"
@@ -439,9 +498,19 @@ const VehicleListing: React.FC = () => {
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Model</label>
                   <input
                     type="text"
-                    placeholder="e.g. Model 3"
+                    placeholder="e.g. X5"
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
+                    className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm focus:border-blue-600/30"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Variant / Trim</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. xDrive40i"
+                    value={variant}
+                    onChange={(e) => setVariant(e.target.value)}
                     className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm focus:border-blue-600/30"
                   />
                 </div>
@@ -512,6 +581,18 @@ const VehicleListing: React.FC = () => {
                       <option key={tr} value={tr}>{tr}</option>
                     ))}
                   </select>
+                </div>
+                <div className="flex items-center gap-2 pt-2">
+                  <input
+                    id="inStockOnlyMobile"
+                    type="checkbox"
+                    checked={inStockOnly}
+                    onChange={(e) => setInStockOnly(e.target.checked)}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
+                  />
+                  <label htmlFor="inStockOnlyMobile" className="text-xs font-semibold text-slate-700 cursor-pointer select-none">
+                    In Stock Only
+                  </label>
                 </div>
               </div>
             </div>

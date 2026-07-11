@@ -5,6 +5,7 @@ import type { Vehicle } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import api from '../services/api';
+import { parseVehicleDescription } from '../utils/vehicleHelper';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -109,6 +110,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
     }
   };
 
+  const { variant, mileage, images } = parseVehicleDescription(vehicle.description, vehicle.model, vehicle.image_url);
   const isOutOfStock = vehicle.quantity <= 0;
 
   return (
@@ -130,7 +132,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
       <Link to={`/vehicles/${vehicle.id}`} className="block relative overflow-hidden h-48 w-full shrink-0 border-b border-slate-100">
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/5 to-transparent z-1" />
         <img
-          src={getCarImage(vehicle.category, vehicle.image_url)}
+          src={images[0] || getCarImage(vehicle.category, vehicle.image_url)}
           alt={`${vehicle.make} ${vehicle.model}`}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
@@ -152,6 +154,11 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
               <h3 className="text-lg font-bold text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors leading-tight">
                 {vehicle.make} {vehicle.model}
               </h3>
+              {variant && variant !== 'Standard' && (
+                <span className="text-xs font-semibold text-slate-500 block mt-0.5">
+                  {variant}
+                </span>
+              )}
             </Link>
           </div>
 
@@ -159,6 +166,9 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
           <div className="flex flex-wrap gap-1.5">
             <span className="text-[10px] font-semibold bg-slate-100 border border-slate-200/50 px-2 py-0.5 rounded-md text-slate-600 capitalize">
               {vehicle.fuel_type}
+            </span>
+            <span className="text-[10px] font-semibold bg-slate-100 border border-slate-200/50 px-2 py-0.5 rounded-md text-slate-600">
+              {mileage > 0 ? `${mileage.toLocaleString()} km` : '0 km'}
             </span>
             <span className="text-[10px] font-semibold bg-slate-100 border border-slate-200/50 px-2 py-0.5 rounded-md text-slate-600">
               {vehicle.quantity > 0 ? `${vehicle.quantity} available` : 'Sold out'}
