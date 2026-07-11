@@ -5,8 +5,8 @@
 @layer base {
   body {
     font-family: 'Inter', sans-serif;
-    background-color: #08090a;
-    color: #e2e8f0;
+    background-color: #f8f9fa;
+    color: #1e293b;
     overflow-x: hidden;
     margin: 0;
     padding: 0;
@@ -18,42 +18,42 @@
   }
 }
 
-/* Premium Glow Cards and Elements */
+/* Premium Shadows & Subtle Card Border Styling */
 .glow-primary {
-  box-shadow: 0 0 20px rgba(102, 252, 241, 0.15);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.05);
 }
 
 .glow-text-primary {
-  text-shadow: 0 0 10px rgba(102, 252, 241, 0.3);
+  text-shadow: 0 0 10px rgba(37, 99, 235, 0.1);
 }
 
-/* Glassmorphism Classes */
+/* Light Glassmorphism Classes (Premium albacars.ae aesthetic) */
 .glass {
-  background: rgba(13, 14, 18, 0.8);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
 }
 
 .glass-light {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .glass-card {
-  background: rgba(18, 20, 24, 0.5);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
-  border-color: rgba(102, 252, 241, 0.25);
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(102, 252, 241, 0.05);
+  border-color: rgba(37, 99, 235, 0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
 }
 
 /* Custom Scrollbars */
@@ -63,16 +63,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #08090a;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(102, 252, 241, 0.3);
+  background: rgba(37, 99, 235, 0.3);
 }
 
 /* Animations */
@@ -101,7 +101,7 @@
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, #16181e 25%, #232731 50%, #16181e 75%);
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
   background-size: 200% 100%;
   animation: skeletonShimmer 1.5s infinite;
 }

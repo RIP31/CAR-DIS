@@ -29,15 +29,15 @@ const Navbar: React.FC = () => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
         isScrolled
-          ? 'glass py-3 border-white/5 shadow-lg'
-          : 'bg-[#08090a]/50 py-4 border-transparent'
+          ? 'bg-white/80 backdrop-blur-md py-3 border-slate-200/50 shadow-sm'
+          : 'bg-[#f8f9fa]/85 backdrop-blur-md py-4 border-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2 text-white font-extrabold text-xl uppercase tracking-wider group">
-          <Car className="h-6 w-6 text-teal-400 transition-transform duration-300 group-hover:rotate-12" />
-          <span className="font-['Outfit'] font-extrabold">Car-Dis</span>
+        <Link to="/" className="flex items-center gap-2 text-slate-900 font-extrabold text-xl uppercase tracking-wider group">
+          <Car className="h-6 w-6 text-blue-600 transition-transform duration-300 group-hover:rotate-12" />
+          <span className="font-['Outfit'] font-extrabold text-slate-900">Car-Dis</span>
         </Link>
 
         {/* Desktop Links */}
@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
           <Link
             to="/"
             className={`transition-colors ${
-              isActive('/') ? 'text-teal-400 font-bold' : 'text-slate-300 hover:text-white'
+              isActive('/') ? 'text-blue-600 font-bold' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Home
@@ -53,7 +53,7 @@ const Navbar: React.FC = () => {
           <Link
             to="/vehicles"
             className={`transition-colors ${
-              isActive('/vehicles') ? 'text-teal-400 font-bold' : 'text-slate-300 hover:text-white'
+              isActive('/vehicles') ? 'text-blue-600 font-bold' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Browse Inventory
@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
             <Link
               to="/profile"
               className={`transition-colors ${
-                isActive('/profile') ? 'text-teal-400 font-bold' : 'text-slate-300 hover:text-white'
+                isActive('/profile') ? 'text-blue-600 font-bold' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               My Profile
@@ -73,7 +73,7 @@ const Navbar: React.FC = () => {
           {user?.role === 'ADMIN' && (
             <Link
               to="/admin"
-              className={`flex items-center gap-1 text-rose-400 hover:text-rose-300 transition-colors font-bold uppercase text-xs tracking-wider border border-rose-500/20 bg-rose-500/5 px-2.5 py-1 rounded-full ${
+              className={`flex items-center gap-1 text-rose-600 hover:text-rose-700 transition-colors font-bold uppercase text-xs tracking-wider border border-rose-200 bg-rose-50 px-2.5 py-1 rounded-full ${
                 isActive('/admin') ? 'ring-1 ring-rose-500/30' : ''
               }`}
             >
@@ -87,8 +87,8 @@ const Navbar: React.FC = () => {
         <div className="hidden md:flex items-center gap-6">
           {user ? (
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-slate-300 text-sm">
-                <UserIcon className="h-4 w-4 text-teal-400" />
+              <div className="flex items-center gap-2 text-slate-700 text-sm">
+                <UserIcon className="h-4 w-4 text-blue-600" />
                 <span>{user.name}</span>
               </div>
               <button
@@ -96,16 +96,16 @@ const Navbar: React.FC = () => {
                   logout();
                   navigate('/login');
                 }}
-                className="flex items-center gap-1.5 text-xs uppercase tracking-wider font-bold text-slate-400 hover:text-white transition-colors cursor-pointer border border-white/10 hover:border-white/20 bg-white/3 hover:bg-white/5 px-3 py-1.5 rounded-full"
+                className="flex items-center gap-1.5 text-xs uppercase tracking-wider font-bold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded-full"
               >
-                <LogOut className="h-3.5 w-3.5 text-rose-400" />
+                <LogOut className="h-3.5 w-3.5 text-rose-500" />
                 Sign Out
               </button>
             </div>
           ) : (
             <Link
               to="/login"
-              className="bg-white hover:bg-slate-200 text-black px-5 py-2 rounded-full transition-all text-xs tracking-wider uppercase font-bold shadow-md shadow-white/5 border-none"
+              className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 rounded-full transition-all text-xs tracking-wider uppercase font-bold shadow-md shadow-slate-900/10 border-none"
             >
               Sign In
             </Link>
@@ -117,7 +117,7 @@ const Navbar: React.FC = () => {
           {user?.role === 'ADMIN' && (
             <Link
               to="/admin"
-              className="p-2 text-rose-400 hover:text-rose-300 bg-rose-500/5 border border-rose-500/20 rounded-xl"
+              className="p-2 text-rose-600 hover:text-rose-700 bg-rose-50 border border-rose-100 rounded-xl"
               title="Admin Portal"
             >
               <Shield className="h-4 w-4" />
@@ -125,7 +125,7 @@ const Navbar: React.FC = () => {
           )}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 text-slate-300 hover:text-white bg-white/5 rounded-xl border border-white/5 cursor-pointer"
+            className="p-2 text-slate-600 hover:text-slate-900 bg-slate-100 rounded-xl border border-slate-200 cursor-pointer"
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -134,20 +134,20 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden glass border-b border-white/5 animate-fade-in-up mt-3 py-6 px-6 space-y-4">
+        <div className="md:hidden bg-white border-b border-slate-200 animate-fade-in-up mt-3 py-6 px-6 space-y-4 shadow-md">
           <div className="flex flex-col gap-4 text-sm font-semibold tracking-wide">
             <Link
               to="/"
-              className={`py-2 border-b border-white/5 ${
-                isActive('/') ? 'text-teal-400 font-bold' : 'text-slate-300'
+              className={`py-2 border-b border-slate-100 ${
+                isActive('/') ? 'text-blue-600 font-bold' : 'text-slate-600'
               }`}
             >
               Home
             </Link>
             <Link
               to="/vehicles"
-              className={`py-2 border-b border-white/5 ${
-                isActive('/vehicles') ? 'text-teal-400 font-bold' : 'text-slate-300'
+              className={`py-2 border-b border-slate-100 ${
+                isActive('/vehicles') ? 'text-blue-600 font-bold' : 'text-slate-600'
               }`}
             >
               Browse Inventory
@@ -155,8 +155,8 @@ const Navbar: React.FC = () => {
             {user && (
               <Link
                 to="/profile"
-                className={`py-2 border-b border-white/5 ${
-                  isActive('/profile') ? 'text-teal-400 font-bold' : 'text-slate-300'
+                className={`py-2 border-b border-slate-100 ${
+                  isActive('/profile') ? 'text-blue-600 font-bold' : 'text-slate-600'
                 }`}
               >
                 My Profile
@@ -165,7 +165,7 @@ const Navbar: React.FC = () => {
             {user?.role === 'ADMIN' && (
               <Link
                 to="/admin"
-                className="py-2 border-b border-white/5 text-rose-400 font-bold flex items-center gap-1.5"
+                className="py-2 border-b border-slate-100 text-rose-600 font-bold flex items-center gap-1.5"
               >
                 <Shield className="h-4 w-4" />
                 Admin Dashboard
@@ -176,8 +176,8 @@ const Navbar: React.FC = () => {
           <div className="pt-2 flex flex-col gap-4">
             {user ? (
               <div className="space-y-4">
-                <div className="flex items-center gap-2 text-slate-300 text-sm font-medium py-1">
-                  <UserIcon className="h-4 w-4 text-teal-400" />
+                <div className="flex items-center gap-2 text-slate-700 text-sm font-medium py-1">
+                  <UserIcon className="h-4 w-4 text-blue-600" />
                   <span>Logged in as: {user.name}</span>
                 </div>
                 <button
@@ -185,16 +185,16 @@ const Navbar: React.FC = () => {
                     logout();
                     navigate('/login');
                   }}
-                  className="w-full text-center flex items-center justify-center gap-2 text-xs uppercase tracking-wider font-bold text-slate-400 hover:text-white transition-colors cursor-pointer border border-white/10 bg-white/3 py-3 rounded-full"
+                  className="w-full text-center flex items-center justify-center gap-2 text-xs uppercase tracking-wider font-bold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer border border-slate-200 bg-slate-50 py-3 rounded-full"
                 >
-                  <LogOut className="h-4 w-4 text-rose-400" />
+                  <LogOut className="h-4 w-4 text-rose-500" />
                   Sign Out
                 </button>
               </div>
             ) : (
               <Link
                 to="/login"
-                className="w-full text-center bg-white text-black py-3 rounded-full transition-all text-xs tracking-wider uppercase font-bold shadow-md shadow-white/5 block"
+                className="w-full text-center bg-slate-900 text-white py-3 rounded-full transition-all text-xs tracking-wider uppercase font-bold shadow-md shadow-slate-900/10 block"
               >
                 Sign In
               </Link>

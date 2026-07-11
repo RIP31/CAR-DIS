@@ -114,7 +114,7 @@ const EditVehicle: React.FC = () => {
         <div className="flex justify-between items-center">
           <Link
             to="/admin"
-            className="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-slate-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-slate-500 hover:text-slate-900 transition-colors"
           >
             <ChevronLeft className="h-4 w-4" />
             Back to Dashboard
@@ -123,7 +123,7 @@ const EditVehicle: React.FC = () => {
           {!loading && (
             <button
               onClick={handleDelete}
-              className="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-rose-400 hover:text-rose-300 transition-colors bg-rose-500/5 hover:bg-rose-500/10 border border-rose-500/10 px-3.5 py-2 rounded-xl cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-rose-600 hover:text-rose-700 transition-colors bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3.5 py-2 rounded-xl cursor-pointer"
             >
               <Trash2 className="h-4 w-4" />
               Delete Record
@@ -132,53 +132,53 @@ const EditVehicle: React.FC = () => {
         </div>
 
         {/* Header */}
-        <div className="border-b border-white/5 pb-4">
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Modify Vehicle Details</h1>
+        <div className="border-b border-slate-200 pb-4">
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Modify Vehicle Details</h1>
           <p className="text-sm text-slate-500 mt-1">Edit specifications, pricing structure, and inventory quantity levels</p>
         </div>
 
         {loading ? (
-          <div className="glass p-12 rounded-3xl border border-white/5 bg-[#0d0e12]/60 flex items-center justify-center">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-teal-500/20 border-t-teal-400"></div>
+          <div className="bg-white p-12 rounded-3xl border border-slate-200 flex items-center justify-center shadow-sm">
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-blue-200 border-t-blue-600"></div>
           </div>
         ) : (
           /* Form panel */
-          <form onSubmit={handleSubmit} className="glass p-8 rounded-3xl border border-white/5 bg-[#0d0e12]/60 space-y-6">
+          <form onSubmit={handleSubmit} className="bg-white p-8 rounded-3xl border border-slate-200 space-y-6 shadow-sm">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               
               {/* Make */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Manufacturer (Make)</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Manufacturer (Make)</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Tesla"
                   value={make}
                   onChange={(e) => setMake(e.target.value)}
-                  className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-medium"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 px-4 outline-none focus:border-blue-600/30 text-sm font-medium"
                 />
               </div>
 
               {/* Model */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Model Variant</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Model Variant</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Model Y"
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
-                  className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-medium"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 px-4 outline-none focus:border-blue-600/30 text-sm font-medium"
                 />
               </div>
 
               {/* Category */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Segment Category</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Segment Category</label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-semibold"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 px-4 outline-none focus:border-blue-600/30 text-sm font-semibold"
                 >
                   {CATEGORIES.map((cat) => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -188,7 +188,7 @@ const EditVehicle: React.FC = () => {
 
               {/* Year */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Model Year</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Model Year</label>
                 <input
                   type="number"
                   required
@@ -197,13 +197,13 @@ const EditVehicle: React.FC = () => {
                   placeholder="e.g. 2024"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-medium"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 px-4 outline-none focus:border-blue-600/30 text-sm font-medium"
                 />
               </div>
 
               {/* Price */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Pricing ($)</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Pricing ($)</label>
                 <input
                   type="number"
                   required
@@ -212,13 +212,13 @@ const EditVehicle: React.FC = () => {
                   placeholder="e.g. 59900"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-medium animate-none"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 px-4 outline-none focus:border-blue-600/30 text-sm font-medium animate-none"
                 />
               </div>
 
               {/* Quantity */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Available Stock units</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Available Stock units</label>
                 <input
                   type="number"
                   required
@@ -226,17 +226,17 @@ const EditVehicle: React.FC = () => {
                   placeholder="e.g. 5"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
-                  className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-medium"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 px-4 outline-none focus:border-blue-600/30 text-sm font-medium"
                 />
               </div>
 
               {/* Fuel Type */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Fuel configuration</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Fuel configuration</label>
                 <select
                   value={fuelType}
                   onChange={(e) => setFuelType(e.target.value)}
-                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-semibold"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 px-4 outline-none focus:border-blue-600/30 text-sm font-semibold"
                 >
                   {FUEL_TYPES.map((ft) => (
                     <option key={ft} value={ft}>{ft}</option>
@@ -246,11 +246,11 @@ const EditVehicle: React.FC = () => {
 
               {/* Transmission */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Gearbox Transmission</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Gearbox Transmission</label>
                 <select
                   value={transmission}
                   onChange={(e) => setTransmission(e.target.value)}
-                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-semibold"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 px-4 outline-none focus:border-blue-600/30 text-sm font-semibold"
                 >
                   {TRANSMISSIONS.map((tr) => (
                     <option key={tr} value={tr}>{tr}</option>
@@ -261,8 +261,8 @@ const EditVehicle: React.FC = () => {
 
             {/* Image URL */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block flex items-center gap-1">
-                <ImageIcon className="h-4 w-4 text-teal-400/50" />
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block flex items-center gap-1">
+                <ImageIcon className="h-4 w-4 text-blue-600" />
                 Vehicle Image URL (optional)
               </label>
               <input
@@ -270,29 +270,29 @@ const EditVehicle: React.FC = () => {
                 placeholder="e.g. https://images.unsplash.com/photo-..."
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-medium"
+                className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 px-4 outline-none focus:border-blue-600/30 text-sm font-medium"
               />
               <p className="text-[10px] text-slate-500">Leave blank to assign a beautiful dynamic category cover photograph automatically.</p>
             </div>
 
             {/* Description */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Description / details (optional)</label>
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Description / details (optional)</label>
               <textarea
                 placeholder="Describe styling highlights, specs, and status logs..."
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-teal-500/30 text-sm font-medium resize-none"
+                className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-3 px-4 outline-none focus:border-blue-600/30 text-sm font-medium resize-none"
               />
             </div>
 
             {/* Submit */}
-            <div className="flex gap-4 pt-4 border-t border-white/5">
+            <div className="flex gap-4 pt-4 border-t border-slate-100">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 bg-white hover:bg-slate-200 text-black font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 border-none disabled:opacity-50"
+                className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 border-none disabled:opacity-50"
               >
                 <Save className="h-4 w-4" />
                 {isSubmitting ? 'Saving...' : 'Save Modifications'}
@@ -300,7 +300,7 @@ const EditVehicle: React.FC = () => {
               
               <Link
                 to="/admin"
-                className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs px-8 py-3.5 rounded-xl uppercase tracking-wider transition-all flex items-center justify-center"
+                className="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold text-xs px-8 py-3.5 rounded-xl uppercase tracking-wider transition-all flex items-center justify-center"
               >
                 Cancel
               </Link>

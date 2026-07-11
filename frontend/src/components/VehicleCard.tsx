@@ -115,7 +115,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
     <div className="glass-card rounded-2xl overflow-hidden flex flex-col h-full group relative">
       {/* Badge Top Left */}
       <div className="absolute top-4 left-4 z-10 flex flex-col gap-1.5">
-        <span className="text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur border border-white/10 text-white px-2.5 py-1 rounded-md">
+        <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-900/90 backdrop-blur border border-slate-700/30 text-white px-2.5 py-1 rounded-md shadow-sm">
           {vehicle.category}
         </span>
         {isOutOfStock && (
@@ -127,8 +127,8 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
       </div>
 
       {/* Vehicle Image */}
-      <Link to={`/vehicles/${vehicle.id}`} className="block relative overflow-hidden h-48 w-full shrink-0">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0C10]/40 to-transparent z-1" />
+      <Link to={`/vehicles/${vehicle.id}`} className="block relative overflow-hidden h-48 w-full shrink-0 border-b border-slate-100">
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/5 to-transparent z-1" />
         <img
           src={getCarImage(vehicle.category, vehicle.image_url)}
           alt={`${vehicle.make} ${vehicle.model}`}
@@ -138,18 +138,18 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
       </Link>
 
       {/* Specifications */}
-      <div className="p-6 flex flex-col justify-between flex-1">
+      <div className="p-6 flex flex-col justify-between flex-1 bg-white">
         <div className="space-y-3.5">
           {/* Year and Title */}
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-xs text-slate-500 font-semibold uppercase tracking-wider">
-              <Calendar className="h-3.5 w-3.5 text-teal-400" />
+              <Calendar className="h-3.5 w-3.5 text-blue-600" />
               <span>{vehicle.year}</span>
               <span>•</span>
               <span>{vehicle.transmission}</span>
             </div>
             <Link to={`/vehicles/${vehicle.id}`} className="block">
-              <h3 className="text-lg font-bold text-white tracking-tight group-hover:text-teal-400 transition-colors leading-tight">
+              <h3 className="text-lg font-bold text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors leading-tight">
                 {vehicle.make} {vehicle.model}
               </h3>
             </Link>
@@ -157,44 +157,44 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
 
           {/* Quick Specs Badges */}
           <div className="flex flex-wrap gap-1.5">
-            <span className="text-[10px] font-semibold bg-white/5 border border-white/5 px-2 py-0.5 rounded-md text-slate-400 capitalize">
+            <span className="text-[10px] font-semibold bg-slate-100 border border-slate-200/50 px-2 py-0.5 rounded-md text-slate-600 capitalize">
               {vehicle.fuel_type}
             </span>
-            <span className="text-[10px] font-semibold bg-white/5 border border-white/5 px-2 py-0.5 rounded-md text-slate-400">
+            <span className="text-[10px] font-semibold bg-slate-100 border border-slate-200/50 px-2 py-0.5 rounded-md text-slate-600">
               {vehicle.quantity > 0 ? `${vehicle.quantity} available` : 'Sold out'}
             </span>
           </div>
 
           {/* Pricing & Stock status */}
           <div className="flex justify-between items-baseline pt-1">
-            <span className="text-2xl font-extrabold text-white font-['Outfit']">
+            <span className="text-2xl font-extrabold text-slate-900 font-['Outfit']">
               ${vehicle.price.toLocaleString()}
             </span>
           </div>
         </div>
 
         {/* Buttons Action bar */}
-        <div className="flex gap-2.5 mt-6 pt-2 border-t border-white/5">
+        <div className="flex gap-2.5 mt-6 pt-2 border-t border-slate-100">
           {user?.role === 'ADMIN' ? (
             /* Admin Actions */
             <div className="w-full flex gap-2">
               <button
                 onClick={handleRestock}
-                className="flex-1 bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 border border-teal-500/20 rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1"
+                className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200/50 rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1"
                 title="Add 5 Units to stock"
               >
                 Restock
               </button>
               <Link
                 to={`/admin/edit-vehicle/${vehicle.id}`}
-                className="p-2.5 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/5 rounded-xl transition-all flex items-center justify-center"
+                className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-xl transition-all flex items-center justify-center"
                 title="Edit Attributes"
               >
                 <Settings className="h-4 w-4" />
               </Link>
               <button
                 onClick={handleDelete}
-                className="p-2.5 bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/10 rounded-xl transition-all cursor-pointer"
+                className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/50 rounded-xl transition-all cursor-pointer"
                 title="Delete Vehicle"
               >
                 Delete
@@ -208,8 +208,8 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
                 disabled={isOutOfStock}
                 className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer border-none ${
                   isOutOfStock
-                    ? 'bg-white/5 text-slate-600 cursor-not-allowed border border-white/5'
-                    : 'bg-white text-black hover:bg-slate-200 shadow-md shadow-white/5'
+                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                    : 'bg-slate-900 text-white hover:bg-slate-800 shadow-md shadow-slate-900/10 font-bold'
                 }`}
               >
                 <ShoppingBag className="h-3.5 w-3.5" />
@@ -217,7 +217,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
               </button>
               <Link
                 to={`/vehicles/${vehicle.id}`}
-                className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center"
+                className="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center"
               >
                 <Eye className="h-3.5 w-3.5" />
               </Link>

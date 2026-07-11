@@ -52,9 +52,7 @@ const VehicleListing: React.FC = () => {
 
       let response;
       if (Object.keys(params).length > 0 || searchQuery) {
-        // If searchQuery exists from Home search, we can merge make/model filters or look for match
         if (searchQuery) {
-          // Let's filter on the backend using query params
           params.make = searchQuery; 
         }
         response = await api.get<Vehicle[]>('/api/vehicles/search', { params });
@@ -73,7 +71,6 @@ const VehicleListing: React.FC = () => {
             v.model.toLowerCase().includes(query) ||
             v.category.toLowerCase().includes(query)
         );
-        // If local search found results, use them, otherwise use the backend response
         if (filtered.length > 0) {
           data = filtered;
         }
@@ -141,9 +138,9 @@ const VehicleListing: React.FC = () => {
     <MainLayout>
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 space-y-8 min-h-screen">
         {/* Header Title */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/5 pb-6 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold text-white tracking-tight">Vehicle Showroom</h1>
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Vehicle Showroom</h1>
             <p className="text-sm text-slate-500 mt-1">
               {searchQuery
                 ? `Search results for "${searchQuery}" • ${sortedVehicles.length} vehicles found`
@@ -153,19 +150,19 @@ const VehicleListing: React.FC = () => {
 
           <div className="flex items-center gap-3 w-full md:w-auto shrink-0 justify-between md:justify-end">
             {/* View Mode controls */}
-            <div className="flex bg-white/5 border border-white/5 p-1 rounded-xl gap-1">
+            <div className="flex bg-slate-100 border border-slate-200 p-1 rounded-xl gap-1">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-lg transition-colors cursor-pointer border-none ${
-                  viewMode === 'grid' ? 'bg-white text-black font-bold' : 'text-slate-400 hover:text-white'
+                className={`p-1.5 rounded-lg transition-colors cursor-pointer border border-transparent ${
+                  viewMode === 'grid' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-400 hover:text-slate-900'
                 }`}
               >
                 <Grid className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-lg transition-colors cursor-pointer border-none ${
-                  viewMode === 'list' ? 'bg-white text-black font-bold' : 'text-slate-400 hover:text-white'
+                className={`p-1.5 rounded-lg transition-colors cursor-pointer border border-transparent ${
+                  viewMode === 'list' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-400 hover:text-slate-900'
                 }`}
               >
                 <List className="h-4 w-4" />
@@ -173,24 +170,24 @@ const VehicleListing: React.FC = () => {
             </div>
 
             {/* Sort Dropdown */}
-            <div className="flex items-center gap-2 bg-white/5 border border-white/5 px-3 py-1.5 rounded-xl text-sm font-semibold">
-              <ArrowUpDown className="h-4 w-4 text-teal-400" />
+            <div className="flex items-center gap-2 bg-white border border-slate-200 px-3 py-1.5 rounded-xl text-sm font-semibold text-slate-700">
+              <ArrowUpDown className="h-4 w-4 text-blue-600" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-transparent text-white outline-none border-none cursor-pointer pr-4"
+                className="bg-transparent text-slate-800 outline-none border-none cursor-pointer pr-4"
               >
-                <option value="newest" className="bg-[#0b0c10]">Year: Newest</option>
-                <option value="price_asc" className="bg-[#0b0c10]">Price: Low to High</option>
-                <option value="price_desc" className="bg-[#0b0c10]">Price: High to Low</option>
-                <option value="make_asc" className="bg-[#0b0c10]">Make: Alphabetical</option>
+                <option value="newest">Year: Newest</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="make_asc">Make: Alphabetical</option>
               </select>
             </div>
 
             {/* Mobile Filter toggle */}
             <button
               onClick={() => setShowMobileFilters(true)}
-              className="md:hidden flex items-center gap-2 bg-teal-500 text-black px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border-none cursor-pointer"
+              className="md:hidden flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border-none cursor-pointer hover:bg-slate-800"
             >
               <SlidersHorizontal className="h-4 w-4" />
               Filters
@@ -202,15 +199,15 @@ const VehicleListing: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
           
           {/* 1. Left Filters Sidebar (Desktop) */}
-          <aside className="hidden lg:block glass p-6 rounded-2xl border border-white/5 space-y-6 sticky top-24 max-h-[85vh] overflow-y-auto bg-[#0d0e12]/60">
-            <div className="flex justify-between items-center border-b border-white/5 pb-3">
-              <h2 className="text-sm font-bold uppercase text-white tracking-widest flex items-center gap-2">
-                <SlidersHorizontal className="h-4 w-4 text-teal-400" />
+          <aside className="hidden lg:block bg-white p-6 rounded-2xl border border-slate-200 space-y-6 sticky top-24 max-h-[85vh] overflow-y-auto shadow-sm">
+            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+              <h2 className="text-sm font-bold uppercase text-slate-900 tracking-widest flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4 text-blue-600" />
                 Refine Search
               </h2>
               <button
                 onClick={handleClearFilters}
-                className="text-[10px] uppercase font-bold text-slate-500 hover:text-teal-400 transition-colors border-none bg-transparent cursor-pointer"
+                className="text-[10px] uppercase font-bold text-slate-500 hover:text-blue-600 transition-colors border-none bg-transparent cursor-pointer"
               >
                 Clear All
               </button>
@@ -226,7 +223,7 @@ const VehicleListing: React.FC = () => {
                   placeholder="e.g. Toyota"
                   value={make}
                   onChange={(e) => setMake(e.target.value)}
-                  className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm"
                 />
               </div>
 
@@ -238,7 +235,7 @@ const VehicleListing: React.FC = () => {
                   placeholder="e.g. Camry"
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
-                  className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm"
                 />
               </div>
 
@@ -248,7 +245,7 @@ const VehicleListing: React.FC = () => {
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm font-semibold"
                 >
                   <option value="">All Categories</option>
                   {CATEGORIES.map((cat) => (
@@ -266,14 +263,14 @@ const VehicleListing: React.FC = () => {
                     placeholder="Min"
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
-                    className="bg-white/3 border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm w-full"
+                    className="bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm w-full"
                   />
                   <input
                     type="number"
                     placeholder="Max"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
-                    className="bg-white/3 border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm w-full"
+                    className="bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm w-full"
                   />
                 </div>
               </div>
@@ -286,7 +283,7 @@ const VehicleListing: React.FC = () => {
                   placeholder="e.g. 2023"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm"
                 />
               </div>
 
@@ -296,7 +293,7 @@ const VehicleListing: React.FC = () => {
                 <select
                   value={fuelType}
                   onChange={(e) => setFuelType(e.target.value)}
-                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm font-semibold"
                 >
                   <option value="">All Fuel Types</option>
                   {FUEL_TYPES.map((ft) => (
@@ -311,7 +308,7 @@ const VehicleListing: React.FC = () => {
                 <select
                   value={transmission}
                   onChange={(e) => setTransmission(e.target.value)}
-                  className="w-full bg-[#0d0e12] border border-white/5 text-white rounded-xl py-2 px-3 outline-none focus:border-teal-500/30 text-sm"
+                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm font-semibold"
                 >
                   <option value="">All Transmissions</option>
                   {TRANSMISSIONS.map((tr) => (
@@ -327,14 +324,14 @@ const VehicleListing: React.FC = () => {
             {loading ? (
               <ListingSkeleton />
             ) : paginatedVehicles.length === 0 ? (
-              <div className="text-center py-24 glass rounded-3xl border border-white/5 space-y-4">
-                <h3 className="text-xl font-bold font-['Outfit']">No Matching Vehicles</h3>
+              <div className="text-center py-24 bg-white rounded-3xl border border-slate-200 space-y-4 shadow-sm">
+                <h3 className="text-xl font-bold text-slate-900 font-['Outfit']">No Matching Vehicles</h3>
                 <p className="text-sm text-slate-500 max-w-sm mx-auto">
                   We couldn't find any vehicles in our database matching your current criteria. Try loosening your filters.
                 </p>
                 <button
                   onClick={handleClearFilters}
-                  className="bg-white hover:bg-slate-200 text-black px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider border-none cursor-pointer"
+                  className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider border-none cursor-pointer"
                 >
                   Reset All Filters
                 </button>
@@ -364,11 +361,11 @@ const VehicleListing: React.FC = () => {
 
                 {/* Pagination Controls */}
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-3 pt-6 border-t border-white/5">
+                  <div className="flex items-center justify-center gap-3 pt-6 border-t border-slate-200">
                     <button
                       onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                       disabled={currentPage === 1}
-                      className="p-2 border border-white/10 hover:border-teal-500/30 hover:bg-white/3 rounded-xl disabled:opacity-30 disabled:hover:border-white/10 disabled:hover:bg-transparent cursor-pointer bg-transparent text-white"
+                      className="p-2 border border-slate-200 hover:border-blue-500/30 hover:bg-slate-50 rounded-xl disabled:opacity-30 disabled:hover:border-slate-200 disabled:hover:bg-transparent cursor-pointer bg-white text-slate-700"
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </button>
@@ -378,10 +375,10 @@ const VehicleListing: React.FC = () => {
                         <button
                           key={i}
                           onClick={() => setCurrentPage(i + 1)}
-                          className={`h-9 w-9 rounded-xl text-xs font-bold transition-all border border-transparent cursor-pointer ${
+                          className={`h-9 w-9 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                             currentPage === i + 1
-                              ? 'bg-teal-500 text-black border-teal-400'
-                              : 'bg-white/3 hover:bg-white/5 border-white/5 text-slate-300'
+                              ? 'bg-blue-600 text-white border-blue-500 shadow-sm shadow-blue-500/10'
+                              : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700'
                           }`}
                         >
                           {i + 1}
@@ -392,7 +389,7 @@ const VehicleListing: React.FC = () => {
                     <button
                       onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                       disabled={currentPage === totalPages}
-                      className="p-2 border border-white/10 hover:border-teal-500/30 hover:bg-white/3 rounded-xl disabled:opacity-30 disabled:hover:border-white/10 disabled:hover:bg-transparent cursor-pointer bg-transparent text-white"
+                      className="p-2 border border-slate-200 hover:border-blue-500/30 hover:bg-slate-50 rounded-xl disabled:opacity-30 disabled:hover:border-slate-200 disabled:hover:bg-transparent cursor-pointer bg-white text-slate-700"
                     >
                       <ChevronRight className="h-4 w-4" />
                     </button>
@@ -409,18 +406,18 @@ const VehicleListing: React.FC = () => {
         <div className="fixed inset-0 z-50 flex justify-end lg:hidden animate-fade-in-up">
           <div
             onClick={() => setShowMobileFilters(false)}
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
           />
-          <div className="relative w-full max-w-sm h-full bg-[#0d0e12] border-l border-white/5 p-6 flex flex-col justify-between z-10 overflow-y-auto">
+          <div className="relative w-full max-w-sm h-full bg-white border-l border-slate-200 p-6 flex flex-col justify-between z-10 overflow-y-auto shadow-2xl">
             <div className="space-y-6">
-              <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                <h3 className="text-lg font-bold font-['Outfit'] flex items-center gap-2">
-                  <SlidersHorizontal className="h-5 w-5 text-teal-400" />
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 className="text-lg font-bold text-slate-900 font-['Outfit'] flex items-center gap-2">
+                  <SlidersHorizontal className="h-5 w-5 text-blue-600" />
                   Filter Options
                 </h3>
                 <button
                   onClick={() => setShowMobileFilters(false)}
-                  className="text-slate-400 hover:text-white cursor-pointer border-none bg-transparent"
+                  className="text-slate-400 hover:text-slate-900 cursor-pointer border-none bg-transparent"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -435,7 +432,7 @@ const VehicleListing: React.FC = () => {
                     placeholder="e.g. Tesla"
                     value={make}
                     onChange={(e) => setMake(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none text-sm"
+                    className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm focus:border-blue-600/30"
                   />
                 </div>
                 <div className="space-y-1">
@@ -445,7 +442,7 @@ const VehicleListing: React.FC = () => {
                     placeholder="e.g. Model 3"
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none text-sm"
+                    className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm focus:border-blue-600/30"
                   />
                 </div>
                 <div className="space-y-1">
@@ -453,7 +450,7 @@ const VehicleListing: React.FC = () => {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full bg-[#0d0e12] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none text-sm font-medium"
+                    className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm font-semibold focus:border-blue-600/30"
                   >
                     <option value="">All Categories</option>
                     {CATEGORIES.map((cat) => (
@@ -469,14 +466,14 @@ const VehicleListing: React.FC = () => {
                       placeholder="Min"
                       value={minPrice}
                       onChange={(e) => setMinPrice(e.target.value)}
-                      className="bg-white/5 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none text-sm w-full"
+                      className="bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm w-full focus:border-blue-600/30"
                     />
                     <input
                       type="number"
                       placeholder="Max"
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(e.target.value)}
-                      className="bg-white/5 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none text-sm w-full"
+                      className="bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm w-full focus:border-blue-600/30"
                     />
                   </div>
                 </div>
@@ -487,7 +484,7 @@ const VehicleListing: React.FC = () => {
                     placeholder="e.g. 2023"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none text-sm"
+                    className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm focus:border-blue-600/30"
                   />
                 </div>
                 <div className="space-y-1">
@@ -495,7 +492,7 @@ const VehicleListing: React.FC = () => {
                   <select
                     value={fuelType}
                     onChange={(e) => setFuelType(e.target.value)}
-                    className="w-full bg-[#0d0e12] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none text-sm font-medium"
+                    className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm font-semibold focus:border-blue-600/30"
                   >
                     <option value="">All Fuel Types</option>
                     {FUEL_TYPES.map((ft) => (
@@ -508,7 +505,7 @@ const VehicleListing: React.FC = () => {
                   <select
                     value={transmission}
                     onChange={(e) => setTransmission(e.target.value)}
-                    className="w-full bg-[#0d0e12] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none text-sm font-medium"
+                    className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm font-semibold focus:border-blue-600/30"
                   >
                     <option value="">All Transmissions</option>
                     {TRANSMISSIONS.map((tr) => (
@@ -519,10 +516,10 @@ const VehicleListing: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex gap-4 pt-6 mt-6 border-t border-white/5">
+            <div className="flex gap-4 pt-6 mt-6 border-t border-slate-100">
               <button
                 onClick={() => setShowMobileFilters(false)}
-                className="flex-1 bg-white text-black font-bold py-3 rounded-xl text-xs uppercase tracking-wider border-none cursor-pointer"
+                className="flex-1 bg-slate-900 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider border-none cursor-pointer hover:bg-slate-800"
               >
                 Apply Filters
               </button>
@@ -531,7 +528,7 @@ const VehicleListing: React.FC = () => {
                   handleClearFilters();
                   setShowMobileFilters(false);
                 }}
-                className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs px-6 py-3 rounded-xl uppercase tracking-wider transition-all cursor-pointer"
+                className="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold text-xs px-6 py-3 rounded-xl uppercase tracking-wider transition-all cursor-pointer"
               >
                 Reset
               </button>
