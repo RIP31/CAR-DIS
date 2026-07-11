@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import VehicleCard from '../components/VehicleCard';
+import { ToastProvider } from '../context/ToastContext';
 import type { Vehicle } from '../types';
 
 // Mock useAuth
@@ -31,8 +32,12 @@ const mockVehicle: Vehicle = {
 
 describe('Footer Component', () => {
   it('renders copyright text', () => {
-    render(<Footer />);
-    expect(screen.getByText(/Car Dealership Inventory System/i)).toBeInTheDocument();
+    render(
+      <BrowserRouter>
+        <Footer />
+      </BrowserRouter>
+    );
+    expect(screen.getByText(/CAR-DIS Systems Inc/i)).toBeInTheDocument();
   });
 });
 
@@ -67,12 +72,14 @@ describe('VehicleCard Component', () => {
   it('renders vehicle specs and price', () => {
     render(
       <BrowserRouter>
-        <VehicleCard vehicle={mockVehicle} />
+        <ToastProvider>
+          <VehicleCard vehicle={mockVehicle} />
+        </ToastProvider>
       </BrowserRouter>
     );
     expect(screen.getByText('Honda Civic')).toBeInTheDocument();
     expect(screen.getByText('$22,000')).toBeInTheDocument();
     expect(screen.getByText('Sedan')).toBeInTheDocument();
-    expect(screen.getByText('3 in stock')).toBeInTheDocument();
+    expect(screen.getByText('3 available')).toBeInTheDocument();
   });
 });
