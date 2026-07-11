@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import router as auth_router
+from app.api.vehicles import router as vehicles_router
 from app.core.settings import get_settings
 from app.core.exceptions import http_exception_handler, unhandled_exception_handler
 
@@ -27,6 +28,7 @@ app.add_exception_handler(HTTPException, http_exception_handler)
 app.add_exception_handler(Exception, unhandled_exception_handler)
 
 app.include_router(auth_router)
+app.include_router(vehicles_router)
 
 @app.get("/")
 def root() -> dict[str, str]:
