@@ -36,6 +36,9 @@ def db_session():
         yield db
     finally:
         db.close()
+        # Drop and recreate tables to guarantee clean state between tests
+        Base.metadata.drop_all(bind=engine)
+        Base.metadata.create_all(bind=engine)
         engine.dispose()
 
 @pytest.fixture
