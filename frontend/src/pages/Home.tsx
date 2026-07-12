@@ -9,26 +9,67 @@ import CallbackForm from '../components/CallbackForm';
 import { CardSkeleton } from '../components/LoadingSkeleton';
 
 const BRANDS = [
-  { name: 'Tesla', logo: '⚡' },
-  { name: 'BMW', logo: '🇩🇪' },
-  { name: 'Mercedes-Benz', logo: '⭐️' },
-  { name: 'Toyota', logo: '🇯🇵' },
-  { name: 'Ford', logo: '🇺🇸' },
-  { name: 'Audi', logo: '🛞' },
+  { name: 'BMW', slug: 'bmw', color: '0066B1' },
+  { name: 'Mercedes', slug: 'mercedes-benz', color: '000000' },
+  { name: 'Audi', slug: 'audi', color: '090A0A' },
+  { name: 'Porsche', slug: 'porsche', color: 'B1272C' },
+  { name: 'Lexus', slug: 'lexus', color: '000000' },
+  { name: 'Toyota', slug: 'toyota', color: 'EB0A1E' },
+  { name: 'Honda', slug: 'honda', color: 'E4002B' },
+  { name: 'Hyundai', slug: 'hyundai', color: '002C5F' },
+  { name: 'Kia', slug: 'kia', color: 'EA0A2A' },
+  { name: 'Tesla', slug: 'tesla', color: 'CC0000' },
+  { name: 'Volvo', slug: 'volvo', color: '003057' },
+  { name: 'Ford', slug: 'ford', color: '003478' },
+  { name: 'Nissan', slug: 'nissan', color: 'C3002F' },
+  { name: 'Chevrolet', slug: 'chevrolet', color: 'CD9834' },
+  { name: 'Jeep', slug: 'jeep', color: '0A2F1D' },
+  { name: 'Land Rover', slug: 'land-rover', color: '005A2B' },
 ];
 
 const CATEGORIES = [
-  { name: 'SUV', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&q=80&w=400', count: '12+ Models' },
-  { name: 'Sedan', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&q=80&w=400', count: '8+ Models' },
-  { name: 'Coupe', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=400', count: '5+ Models' },
-  { name: 'Sports', image: 'https://images.unsplash.com/photo-1542282088-fe8426682b8f?auto=format&fit=crop&q=80&w=400', count: '4+ Models' },
-  { name: 'Convertible', image: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&q=80&w=400', count: '3+ Models' },
-  { name: 'Truck', image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=400', count: '6+ Models' },
+  {
+    name: 'SUV',
+    image: 'https://di-uploads-pod19.dealerinspire.com/valleybuickgmc/uploads/2024/10/2025-gmc-yukon-denali-ultimate-001-1.jpg'
+  },
+  {
+    name: 'Sedan',
+    image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80&w=600'
+  },
+  {
+    name: 'Coupe',
+    image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=600'
+  },
+  {
+    name: 'Sports',
+    image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&q=80&w=600'
+  },
+  {
+    name: 'Convertible',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjBhcUQigHUD_Td5yjBWwyojJmnnP6y1Ou-dQM6FUh7NSliBq4ws78tkQF&s=10'
+  },
+  {
+    name: 'Luxury',
+    image: 'https://media.istockphoto.com/id/1221371590/photo/rolls-royce-phantom.jpg?s=612x612&w=0&k=20&c=wP5yIWxOu1H4BeHUCqL9QFJ6YC4ljgoJI8CH5XKwv_c='
+  },
+  {
+    name: 'Electric',
+    image: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=600'
+  },
+  {
+    name: 'Hatchback',
+    image: 'https://hips.hearstapps.com/hmg-prod/images/2023-lightning-lap-volkswagen-golf-gti-mu-105-1675446169.jpg?crop=0.629xw:0.630xh;0.121xw,0.199xh'
+  },
+  {
+    name: 'Pickup',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzWriyJMpLEuNrgSwL15w71I4o_NFTUYYbjCOc9b0jee7aU83IlWx5hRY&s=10'
+  },
 ];
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [featuredVehicles, setFeaturedVehicles] = useState<Vehicle[]>([]);
   const [latestVehicles, setLatestVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,6 +79,7 @@ const Home: React.FC = () => {
       try {
         const response = await api.get<Vehicle[]>('/api/vehicles');
         const list = response.data;
+        setVehicles(list);
         // Featured vehicles = vehicles with highest price or first few
         setFeaturedVehicles(list.slice(0, 3));
         // Latest arrivals = sorted by date or first few
@@ -65,10 +107,25 @@ const Home: React.FC = () => {
     setLatestVehicles((prev) => prev.map((v) => (v.id === updated.id ? updated : v)));
   };
 
+  const getBrandCount = (brandName: string) => {
+    return vehicles.filter(v => v.make.toLowerCase() === brandName.toLowerCase()).length;
+  };
+
+  const getCategoryCount = (categoryName: string) => {
+    return vehicles.filter(v => {
+      const cat = v.category.toLowerCase();
+      const target = categoryName.toLowerCase();
+      if (target === 'electric') {
+        return cat === 'electric' || cat === 'ev';
+      }
+      return cat === target;
+    }).length;
+  };
+
   return (
     <MainLayout>
       {/* 1. Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center justify-center bg-cover bg-center select-none overflow-hidden"
+      <section className="relative min-h-[90vh] flex items-center justify-center bg-cover bg-center select-none overflow-hidden"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.6) 60%, rgba(248, 249, 250, 1) 100%), url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1920')`
         }}
@@ -122,15 +179,25 @@ const Home: React.FC = () => {
           <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Quick click filter shortcuts</p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
           {BRANDS.map((brand) => (
             <Link
               key={brand.name}
               to={`/vehicles?make=${brand.name}`}
-              className="bg-white border border-slate-200 p-5 rounded-2xl text-center hover:border-blue-500/30 hover:bg-slate-50 transition-all flex flex-col items-center gap-2 shadow-sm"
+              className="bg-white border border-slate-200/60 p-5 rounded-2xl text-center hover:border-blue-500/20 hover:shadow-md hover:shadow-slate-100/50 transition-all flex flex-col items-center gap-2 group shadow-sm"
             >
-              <span className="text-3xl filter saturate-100">{brand.logo}</span>
-              <span className="text-sm font-bold text-slate-800 tracking-tight">{brand.name}</span>
+              <div className="h-10 w-10 flex items-center justify-center">
+                <img
+                  src={`https://cdn.jsdelivr.net/gh/filippofilip95/car-logos-dataset@master/logos/optimized/${brand.slug}.png`}
+                  alt={`${brand.name} logo`}
+                  className="h-9 w-9 object-contain grayscale opacity-65 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+              <span className="text-xs font-bold text-slate-800 tracking-tight group-hover:text-slate-900 mt-1">{brand.name}</span>
+              <span className="text-[10px] font-semibold text-slate-400 group-hover:text-blue-600 transition-colors mt-0.5">
+                {getBrandCount(brand.name)} {getBrandCount(brand.name) === 1 ? 'Vehicle' : 'Vehicles'}
+              </span>
             </Link>
           ))}
         </div>
@@ -148,24 +215,27 @@ const Home: React.FC = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {CATEGORIES.map((cat) => (
             <Link
               key={cat.name}
               to={`/vehicles?category=${cat.name}`}
-              className="bg-white rounded-2xl overflow-hidden flex flex-col h-48 border border-slate-200 hover:border-blue-500/20 transition-all shadow-sm group"
+              className="bg-white rounded-2xl overflow-hidden flex flex-col h-64 border border-slate-200 hover:border-blue-500/20 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-300 group"
             >
-              <div className="h-32 w-full overflow-hidden relative">
+              <div className="h-48 w-full overflow-hidden relative">
                 <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-all z-1" />
                 <img
                   src={cat.image}
                   alt={cat.name}
-                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  loading="lazy"
                 />
               </div>
-              <div className="p-3 text-center flex-1 flex flex-col justify-center bg-white">
-                <span className="text-sm font-bold text-slate-800 leading-tight">{cat.name}</span>
-                <span className="text-[10px] text-slate-400">{cat.count}</span>
+              <div className="p-4 text-center flex-1 flex flex-col justify-center bg-white">
+                <span className="text-sm font-bold text-slate-800 leading-tight group-hover:text-blue-600 transition-colors">{cat.name}</span>
+                <span className="text-[10px] text-slate-400 mt-0.5">
+                  {getCategoryCount(cat.name)} {getCategoryCount(cat.name) === 1 ? 'in stock' : 'in stock'}
+                </span>
               </div>
             </Link>
           ))}

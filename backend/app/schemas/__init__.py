@@ -3,6 +3,7 @@ from app.schemas.vehicle import VehicleCreate, VehicleUpdate, VehicleResponse, V
 from app.schemas.purchase import PurchaseCreate, PurchaseResponse, PurchaseStatusUpdate
 from app.schemas.wishlist import WishlistCountResponse, WishlistResponse
 from app.schemas.callback import CallbackCreate, CallbackResponse
+from app.schemas.notification import NotificationResponse
 
 __all__ = [
     "UserCreate",
@@ -21,4 +22,5 @@ __all__ = [
     "WishlistResponse",
     "CallbackCreate",
     "CallbackResponse",
+    "NotificationResponse",
 ]

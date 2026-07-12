@@ -33,5 +33,6 @@ We successfully implemented a complete, persistent purchase management system, a
 
 ## 3. Verification & passing tests
 
-*   **Backend Pytest Suite**: `.venv\Scripts\python.exe -m pytest` -> **37 tests passed (100% green)**
+*   **Backend Pytest Suite**: `.venv\Scripts\pytest` -> **38 tests passed (100% green)**
 *   **Frontend Vitest Suite**: `npm run test` -> **23 tests passed (100% green)**
+*   **TypeScript Stabilization**: Fully normalized strict null checks (`TS2345` / `TS2769`) and cleaned up unused imports/variables, achieving an error-free production build (`npm run build`).

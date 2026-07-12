@@ -33,6 +33,19 @@ vi.mock('../context/ToastContext', () => ({
   ToastProvider: ({ children }: any) => <div>{children}</div>,
 }));
 
+// Mock ReservationWizardModal
+vi.mock('../components/ReservationWizardModal', () => ({
+  ReservationWizardModal: ({ isOpen, onClose, onSuccess }: any) => {
+    if (!isOpen) return null;
+    return (
+      <div data-testid="wizard-mock">
+        <button onClick={onClose}>Cancel</button>
+        <button onClick={() => onSuccess()}>Confirm Reservation</button>
+      </div>
+    );
+  }
+}));
+
 const mockVehicles = [
   {
     id: 'v-1',
@@ -104,10 +117,11 @@ describe('VehicleDetails Page', () => {
     mockUseAuth.mockReturnValue({
       user: { name: 'Jane Doe', role: 'USER' },
     });
-    vi.mocked(api.get).mockResolvedValue({ data: mockVehicles[0] });
-    // Successful purchase returns updated vehicle with decremented quantity
+    // First fetch returns vehicle with qty 2
+    vi.mocked(api.get).mockResolvedValueOnce({ data: mockVehicles[0] });
+    // Second fetch (refresh) returns vehicle with qty 1
     const updatedVehicle = { ...mockVehicles[0], quantity: 1 };
-    vi.mocked(api.post).mockResolvedValue({ data: updatedVehicle });
+    vi.mocked(api.get).mockResolvedValueOnce({ data: updatedVehicle });
 
     await act(async () => {
       render(
@@ -119,23 +133,16 @@ describe('VehicleDetails Page', () => {
       );
     });
 
-    const purchaseBtn = screen.getByRole('button', { name: /secure purchase/i });
+    const purchaseBtn = screen.getByRole('button', { name: /reserve vehicle/i });
     await act(async () => {
       purchaseBtn.click();
     });
 
-    const confirmBtn = screen.getByRole('button', { name: /confirm purchase/i });
+    const confirmBtn = screen.getByRole('button', { name: /confirm reservation/i });
     await act(async () => {
       confirmBtn.click();
     });
 
-    expect(api.post).toHaveBeenCalledWith('/api/purchases', {
-      vehicle_id: 'v-1',
-      quantity: 1,
-    });
-    expect(mockShowToast).toHaveBeenCalledWith(
-      'Congratulations! You have purchased the Ford Explorer!',
-      'success'
-    );
+    expect(api.get).toHaveBeenLastCalledWith('/api/vehicles/v-1');
   });
 });

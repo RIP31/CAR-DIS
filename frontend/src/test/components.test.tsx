@@ -63,7 +63,7 @@ describe('Navbar Component', () => {
         <Navbar />
       </BrowserRouter>
     );
-    expect(screen.getByText('Admin Portal')).toBeInTheDocument();
+    expect(screen.getByText('Admin')).toBeInTheDocument();
     expect(screen.queryByText('Sign In')).not.toBeInTheDocument();
   });
 });

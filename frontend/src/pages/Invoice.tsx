@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import type { Purchase } from '../types';
-import { FileText, Printer, ChevronLeft, Building2 } from 'lucide-react';
+import { FileText, Printer, ChevronLeft, Building2, Lock } from 'lucide-react';
 
 const Invoice: React.FC = () => {
   const { purchaseId } = useParams<{ purchaseId: string }>();
@@ -43,8 +43,36 @@ const Invoice: React.FC = () => {
             to={user?.role === 'ADMIN' ? '/admin/purchases' : '/my-purchases'}
             className="text-sm text-blue-600 hover:text-blue-700 font-semibold"
           >
-            {user?.role === 'ADMIN' ? 'Back to Sales Dashboard' : 'Back to Purchases'}
+            {user?.role === 'ADMIN' ? 'Back to Sales Dashboard' : 'Back to Reservations'}
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Invoice Lock Guard
+  const invoiceEnabled = ['Payment Received', 'Ready for Delivery', 'Delivered'].includes(purchase.status);
+  if (!invoiceEnabled) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-center space-y-5 max-w-md p-8 bg-white border border-slate-200 rounded-3xl shadow-sm">
+          <div className="h-16 w-16 bg-rose-50 border border-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto">
+            <Lock className="h-7 w-7" />
+          </div>
+          <div className="space-y-1.5 px-4">
+            <h2 className="text-lg font-bold text-slate-800">Invoice Document Locked</h2>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Invoices are only generated and ready for print/download after the vehicle payment has been received and verified by our dealership finance department.
+            </p>
+          </div>
+          <div className="pt-2">
+            <Link
+              to={user?.role === 'ADMIN' ? '/admin/purchases' : '/my-purchases'}
+              className="inline-flex bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors border-none"
+            >
+              {user?.role === 'ADMIN' ? 'Back to Sales Dashboard' : 'Back to Reservations'}
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -61,7 +89,7 @@ const Invoice: React.FC = () => {
           className="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-slate-500 hover:text-slate-900 transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
-          {user?.role === 'ADMIN' ? 'Back to Sales Dashboard' : 'Back to Purchases'}
+          {user?.role === 'ADMIN' ? 'Back to Sales Dashboard' : 'Back to Reservations'}
         </Link>
         <button
           onClick={() => window.print()}
@@ -95,10 +123,16 @@ const Invoice: React.FC = () => {
         <div className="p-8 space-y-8">
           {/* Customer & Invoice Info */}
           <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-1">
+            <div className="space-y-1 text-xs">
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Bill To</span>
-              <p className="text-sm font-bold text-slate-900">{user?.name || 'Customer'}</p>
-              <p className="text-xs text-slate-500">{user?.email || ''}</p>
+              <p className="text-sm font-bold text-slate-900">{(purchase as any).customer_name || user?.name || 'Customer'}</p>
+              <p className="text-slate-500">{(purchase as any).customer_email || user?.email || ''}</p>
+              <p className="text-slate-500">{(purchase as any).phone || ''}</p>
+              <p className="text-slate-400 font-normal leading-relaxed mt-1 whitespace-pre-line max-w-[240px]">
+                {purchase.address_line}{'\n'}
+                {purchase.city}, {purchase.state}, {purchase.postal_code}{'\n'}
+                {purchase.country}
+              </p>
             </div>
             <div className="text-right space-y-1">
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Invoice Date</span>
@@ -106,16 +140,13 @@ const Invoice: React.FC = () => {
                 {invoiceDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
               </p>
               <span
-                className={`inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full mt-1 ${
-                  purchase.status === 'Delivered'
-                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
-                    : purchase.status === 'Cancelled'
-                    ? 'bg-rose-50 text-rose-600 border border-rose-200'
-                    : 'bg-blue-50 text-blue-600 border border-blue-200'
-                }`}
+                className="inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full mt-1 bg-emerald-50 text-emerald-600 border border-emerald-200"
               >
                 {purchase.status}
               </span>
+              <div className="text-[10px] text-slate-400 font-mono mt-2">
+                Res ID: {purchase.reservation_number}
+              </div>
             </div>
           </div>
 
@@ -132,7 +163,10 @@ const Invoice: React.FC = () => {
               </thead>
               <tbody>
                 <tr className="border-b border-slate-100">
-                  <td className="p-4 font-semibold text-slate-900">{purchase.vehicle_name}</td>
+                  <td className="p-4">
+                    <div className="font-semibold text-slate-900">{purchase.vehicle_name}</div>
+                    <span className="text-[10px] text-slate-400">Variant: {purchase.variant || 'Standard'}</span>
+                  </td>
                   <td className="p-4 text-center text-slate-600">{purchase.quantity}</td>
                   <td className="p-4 text-right text-slate-600 font-['Outfit']">
                     ${(purchase.purchase_price / purchase.quantity).toLocaleString()}

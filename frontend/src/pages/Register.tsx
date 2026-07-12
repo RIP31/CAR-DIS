@@ -11,7 +11,7 @@ const Register: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'USER' | 'ADMIN'>('USER');
+  const role = 'USER';
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 

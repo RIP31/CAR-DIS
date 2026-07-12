@@ -22,8 +22,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const { variant, images } = parseVehicleDescription(vehicle.description, vehicle.model, vehicle.image_url);
-  const imageUrl = images[0] || getCarImage(vehicle.category, vehicle.image_url);
+  const { variant, images } = parseVehicleDescription(vehicle.description || null, vehicle.model, vehicle.image_url || null);
+  const imageUrl = images[0] || getCarImage(vehicle.category, vehicle.image_url || undefined);
 
   return createPortal(
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">

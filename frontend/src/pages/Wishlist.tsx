@@ -33,6 +33,10 @@ const Wishlist: React.FC = () => {
     fetchWishlistVehicles();
   }, [user]);
 
+  useEffect(() => {
+    setVehicles(prev => prev.filter(v => wishlistIds.has(v.id)));
+  }, [wishlistIds]);
+
   const handleUpdate = (updated: Vehicle) => {
     setVehicles(prev => prev.map(v => (v.id === updated.id ? updated : v)));
   };

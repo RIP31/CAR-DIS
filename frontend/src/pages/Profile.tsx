@@ -8,11 +8,12 @@ import api from '../services/api';
 import type { Purchase, PurchaseStatus } from '../types';
 
 const STATUS_STEPS: { label: string; value: PurchaseStatus }[] = [
-  { label: 'Pending', value: 'Pending' },
-  { label: 'Confirmed', value: 'Confirmed' },
+  { label: 'Submitted', value: 'Reservation Submitted' },
+  { label: 'Reviewing', value: 'Dealer Reviewing' },
+  { label: 'Verified', value: 'Documents Verified' },
   { label: 'Payment Pending', value: 'Payment Pending' },
-  { label: 'Documents Pending', value: 'Documents Pending' },
-  { label: 'Ready for Delivery', value: 'Ready for Delivery' },
+  { label: 'Payment Received', value: 'Payment Received' },
+  { label: 'Delivering', value: 'Ready for Delivery' },
   { label: 'Delivered', value: 'Delivered' },
 ];
 

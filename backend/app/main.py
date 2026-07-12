@@ -6,6 +6,7 @@ from app.api.vehicles import router as vehicles_router
 from app.api.purchases import router as purchases_router
 from app.api.wishlist import router as wishlist_router
 from app.api.callbacks import router as callbacks_router
+from app.api.notifications import router as notifications_router
 from app.core.database import Base, engine
 from app.core.settings import get_settings
 from app.core.exceptions import http_exception_handler, unhandled_exception_handler
@@ -36,6 +37,7 @@ app.include_router(vehicles_router)
 app.include_router(purchases_router)
 app.include_router(wishlist_router)
 app.include_router(callbacks_router)
+app.include_router(notifications_router)
 
 
 @app.get("/")

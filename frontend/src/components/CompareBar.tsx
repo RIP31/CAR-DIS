@@ -26,8 +26,8 @@ const CompareBar: React.FC = () => {
           {/* Vehicle Chips */}
           <div className="flex-1 flex gap-3 overflow-x-auto">
             {compareList.map(vehicle => {
-              const { images } = parseVehicleDescription(vehicle.description, vehicle.model, vehicle.image_url);
-              const img = images[0] || getCarImage(vehicle.category, vehicle.image_url);
+              const { images } = parseVehicleDescription(vehicle.description || null, vehicle.model, vehicle.image_url || null);
+              const img = images[0] || getCarImage(vehicle.category, vehicle.image_url || undefined);
               return (
                 <div
                   key={vehicle.id}

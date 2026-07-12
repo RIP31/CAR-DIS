@@ -7,7 +7,7 @@ import { ChevronLeft, Save, Image as ImageIcon } from 'lucide-react';
 
 import { serializeVehicleDescription } from '../utils/vehicleHelper';
 
-const CATEGORIES = ['SUV', 'Sedan', 'Coupe', 'Hatchback', 'EV', 'Luxury', 'Pickup'];
+const CATEGORIES = ['SUV', 'Sedan', 'Coupe', 'Sports', 'Convertible', 'Luxury', 'Electric', 'Hatchback', 'Pickup'];
 const FUEL_TYPES = ['Petrol', 'Diesel', 'Hybrid', 'Electric'];
 const TRANSMISSIONS = ['Automatic', 'Manual'];
 

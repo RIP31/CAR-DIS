@@ -37,7 +37,7 @@ const Compare: React.FC = () => {
 
   const parsedVehicles = compareList.map(v => ({
     vehicle: v,
-    ...parseVehicleDescription(v.description, v.model, v.image_url),
+    ...parseVehicleDescription(v.description || null, v.model, v.image_url || null),
   }));
 
   const specRows = [

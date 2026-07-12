@@ -139,7 +139,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onUpdate, onDelete }
     }
   };
 
-  const { variant, mileage, images } = parseVehicleDescription(vehicle.description, vehicle.model, vehicle.image_url);
+  const { variant, mileage, images } = parseVehicleDescription(vehicle.description || null, vehicle.model, vehicle.image_url || null);
   const isOutOfStock = vehicle.quantity <= 0;
 
   return (

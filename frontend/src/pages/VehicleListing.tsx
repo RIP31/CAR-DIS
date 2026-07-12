@@ -9,7 +9,7 @@ import { SlidersHorizontal, ArrowUpDown, X, Grid, List, ChevronLeft, ChevronRigh
 
 import { parseVehicleDescription } from '../utils/vehicleHelper';
 
-const CATEGORIES = ['SUV', 'Sedan', 'Coupe', 'Hatchback', 'EV', 'Luxury', 'Pickup'];
+const CATEGORIES = ['SUV', 'Sedan', 'Coupe', 'Sports', 'Convertible', 'Luxury', 'Electric', 'Hatchback', 'Pickup'];
 const FUEL_TYPES = ['Petrol', 'Diesel', 'Hybrid', 'Electric'];
 const TRANSMISSIONS = ['Automatic', 'Manual'];
 
@@ -47,7 +47,7 @@ const VehicleListing: React.FC = () => {
       const params: Record<string, any> = {};
       if (make) params.make = make;
       if (model) params.model = model;
-      if (category) params.category = category;
+      if (category && category !== 'Electric') params.category = category;
       if (minPrice) params.min_price = Number(minPrice);
       if (maxPrice) params.max_price = Number(maxPrice);
       if (year) params.year = Number(year);
@@ -73,11 +73,16 @@ const VehicleListing: React.FC = () => {
 
       let data = response.data;
 
+      // Local refinement: Electric / EV category matching
+      if (category === 'Electric') {
+        data = data.filter((v) => v.category.toLowerCase() === 'electric' || v.category.toLowerCase() === 'ev');
+      }
+
       // Local refinement: search query matching make, model, or variant
       if (searchQuery) {
         const query = searchQuery.toLowerCase().trim();
         data = data.filter((v) => {
-          const parsed = parseVehicleDescription(v.description, v.model, v.image_url);
+          const parsed = parseVehicleDescription(v.description || null, v.model, v.image_url || null);
           return (
             v.make.toLowerCase().includes(query) ||
             v.model.toLowerCase().includes(query) ||
@@ -90,7 +95,7 @@ const VehicleListing: React.FC = () => {
       if (variant) {
         const variantQuery = variant.toLowerCase().trim();
         data = data.filter((v) => {
-          const parsed = parseVehicleDescription(v.description, v.model, v.image_url);
+          const parsed = parseVehicleDescription(v.description || null, v.model, v.image_url || null);
           return parsed.variant.toLowerCase().includes(variantQuery);
         });
       }

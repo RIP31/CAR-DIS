@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { getCarImage } from '../components/VehicleCard';
 import { parseVehicleDescription } from '../utils/vehicleHelper';
-import ConfirmationModal from '../components/ConfirmationModal';
+import { ReservationWizardModal } from '../components/ReservationWizardModal';
 import EmiCalculator from '../components/EmiCalculator';
 import {
   ShoppingBag,
@@ -44,8 +44,8 @@ const VehicleDetails: React.FC = () => {
         const response = await api.get<Vehicle>(`/api/vehicles/${id}`);
         setVehicle(response.data);
         
-        const parsed = parseVehicleDescription(response.data.description, response.data.model, response.data.image_url);
-        const primaryImg = parsed.images[0] || getCarImage(response.data.category, response.data.image_url);
+        const parsed = parseVehicleDescription(response.data.description || null, response.data.model, response.data.image_url || null);
+        const primaryImg = parsed.images[0] || getCarImage(response.data.category, response.data.image_url || undefined);
         setActiveImage(primaryImg);
 
         if (parsed.images.length > 1) {
@@ -74,7 +74,7 @@ const VehicleDetails: React.FC = () => {
 
   const handlePurchase = async () => {
     if (!user) {
-      showToast('Please sign in to complete purchase', 'warning');
+      showToast('Please sign in to reserve this vehicle', 'warning');
       navigate('/login');
       return;
     }
@@ -87,26 +87,6 @@ const VehicleDetails: React.FC = () => {
     setShowConfirmation(true);
   };
 
-  const confirmPurchase = async () => {
-    if (!vehicle) return;
-    try {
-      await api.post<Purchase>('/api/purchases', {
-        vehicle_id: vehicle.id,
-        quantity: 1,
-      });
-      showToast(`Congratulations! You have purchased the ${vehicle.make} ${vehicle.model}!`, 'success');
-
-      // Fetch updated vehicle to reflect stock changes in details view
-      const updatedVehicleRes = await api.get<Vehicle>(`/api/vehicles/${vehicle.id}`);
-      setVehicle(updatedVehicleRes.data);
-    } catch (err: any) {
-      const errorMsg = err.response?.data?.detail || 'Purchase transaction failed.';
-      showToast(errorMsg, 'error');
-    } finally {
-      setShowConfirmation(false);
-    }
-  };
-
   if (loading) {
     return (
       <MainLayout>
@@ -117,7 +97,7 @@ const VehicleDetails: React.FC = () => {
 
   if (!vehicle) return null;
 
-  const { variant, mileage, engine_capacity, color, descriptionText } = parseVehicleDescription(vehicle.description, vehicle.model, vehicle.image_url);
+  const { variant, mileage, engine_capacity, color, descriptionText } = parseVehicleDescription(vehicle.description || null, vehicle.model, vehicle.image_url || null);
   const isOutOfStock = vehicle.quantity <= 0;
 
   return (
@@ -266,10 +246,9 @@ const VehicleDetails: React.FC = () => {
                 </div>
               </div>
 
-              {/* Purchase Trigger Box */}
               <div className="pt-6 border-t border-slate-100 space-y-3">
                 <button
-                  onClick={() => setShowConfirmation(true)}
+                  onClick={handlePurchase}
                   disabled={isOutOfStock}
                   className={`w-full py-4 text-xs font-bold uppercase tracking-wider rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer border-none ${
                     isOutOfStock
@@ -278,7 +257,7 @@ const VehicleDetails: React.FC = () => {
                   }`}
                 >
                   <ShoppingBag className="h-4 w-4" />
-                  {isOutOfStock ? 'Out of Stock' : 'Secure Purchase'}
+                  {isOutOfStock ? 'Out of Stock' : 'Reserve Vehicle'}
                 </button>
                 {!isOutOfStock && (
                   <button
@@ -319,11 +298,15 @@ const VehicleDetails: React.FC = () => {
           </p>
         </section>
 
-        <ConfirmationModal
+        <ReservationWizardModal
           vehicle={vehicle}
           isOpen={showConfirmation}
           onClose={() => setShowConfirmation(false)}
-          onConfirm={confirmPurchase}
+          onSuccess={async () => {
+            // Fetch updated vehicle to reflect stock changes
+            const updatedVehicleRes = await api.get<Vehicle>(`/api/vehicles/${vehicle.id}`);
+            setVehicle(updatedVehicleRes.data);
+          }}
         />
       </div>
     </MainLayout>

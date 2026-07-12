@@ -6,13 +6,17 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.core.database import Base
 
 class PurchaseStatus(str, Enum):
-    PENDING = "Pending"
+    RESERVATION_SUBMITTED = "Reservation Submitted"
+    DEALER_REVIEWING = "Dealer Reviewing"
     CONFIRMED = "Confirmed"
+    DOCUMENTS_VERIFICATION = "Documents Verification"
+    FINANCE_APPROVAL = "Finance Approval"
     PAYMENT_PENDING = "Payment Pending"
-    DOCUMENTS_PENDING = "Documents Pending"
+    PAYMENT_RECEIVED = "Payment Received"
     READY_FOR_DELIVERY = "Ready for Delivery"
     DELIVERED = "Delivered"
     CANCELLED = "Cancelled"
+    REJECTED = "Rejected"
 
 def utcnow() -> datetime:
     return datetime.now(timezone.utc)
@@ -41,7 +45,7 @@ class Purchase(Base):
     status: Mapped[PurchaseStatus] = mapped_column(
         SAEnum(PurchaseStatus, name="purchase_status", native_enum=False),
         nullable=False,
-        default=PurchaseStatus.PENDING,
+        default=PurchaseStatus.RESERVATION_SUBMITTED,
     )
     purchase_date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utcnow
@@ -52,3 +56,26 @@ class Purchase(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utcnow, onupdate=utcnow
     )
+
+    # Reservation Workflow Fields
+    reservation_number: Mapped[str | None] = mapped_column(String(100), unique=True, nullable=True)
+    phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    alternate_phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    address_line: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    city: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    state: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    country: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    postal_code: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    govt_id_type: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    govt_id_number: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    driving_license_number: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    date_of_birth: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    preferred_visit_date: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    preferred_visit_time: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    finance_required: Mapped[bool | None] = mapped_column(nullable=True, default=False)
+    trade_in_required: Mapped[bool | None] = mapped_column(nullable=True, default=False)
+    customer_notes: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    dealer_notes: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    expected_delivery_date: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    timeline: Mapped[str | None] = mapped_column(String(4000), nullable=True)
+    reservation_status: Mapped[str | None] = mapped_column(String(100), nullable=True, default="Reservation Submitted")

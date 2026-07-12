@@ -8,7 +8,7 @@ import { ChevronLeft, Save, Trash2, Image as ImageIcon } from 'lucide-react';
 
 import { serializeVehicleDescription, parseVehicleDescription } from '../utils/vehicleHelper';
 
-const CATEGORIES = ['SUV', 'Sedan', 'Coupe', 'Hatchback', 'EV', 'Luxury', 'Pickup'];
+const CATEGORIES = ['SUV', 'Sedan', 'Coupe', 'Sports', 'Convertible', 'Luxury', 'Electric', 'Hatchback', 'Pickup'];
 const FUEL_TYPES = ['Petrol', 'Diesel', 'Hybrid', 'Electric'];
 const TRANSMISSIONS = ['Automatic', 'Manual'];
 
@@ -51,7 +51,7 @@ const EditVehicle: React.FC = () => {
         setFuelType(data.fuel_type);
         setTransmission(data.transmission);
 
-        const parsed = parseVehicleDescription(data.description, data.model, data.image_url);
+        const parsed = parseVehicleDescription(data.description || null, data.model, data.image_url || null);
         setVariant(parsed.variant);
         setMileage(parsed.mileage.toString());
         setEngineCapacity(parsed.engine_capacity);

@@ -9,7 +9,7 @@ export interface ParsedVehicle {
 
 export function parseVehicleDescription(
   description: string | null,
-  fallbackModel: string,
+  _fallbackModel: string,
   fallbackImgUrl: string | null
 ): ParsedVehicle {
   if (!description) {
