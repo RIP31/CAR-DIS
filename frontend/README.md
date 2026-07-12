@@ -1,18 +1,5 @@
 # Car Dealership Inventory System - Frontend
 
-## Environment
-
-```text
-Current time: 2026-07-11T11:41:04+05:30
-Working directory: D:\ridham\DDU\Incubyte\Project\CAR-DIS\frontend
-Workspace root folder: D:\ridham\DDU\Incubyte\Project
-AI / Editor: Kilo (kilo.ai)
-```
-
-## Frontend Development
-
-The frontend was initially scaffolded using **Antigravity AI**. I customized, tested, and integrated it with the backend, while **Kilo Code** assisted in fixing API mismatches, runtime issues, and refining the implementation.
-
 ## Stack
 
 - React 19
@@ -40,26 +27,32 @@ The frontend was initially scaffolded using **Antigravity AI**. I customized, te
 - `build` — TypeScript check + Vite build
 - `lint` — run Oxlint
 - `preview` — preview production build
+- `test` — run Vitest test runner
 
 ## Proxy
 
 Dev server proxies `/api` to `http://127.0.0.1:8000`.
 
-## Pages
+## Pages & Routes
 
-- `/` — Home catalog with search, featured vehicles, latest arrivals
+- `/` — Home catalog with search, 16 popular brand shortcuts, and 9 category cards (3x3 grid)
 - `/login` — User login
 - `/register` — User registration with role selection
-- `/vehicles` — Vehicle listing with filters, search, sort, pagination
-- `/vehicles/:id` — Vehicle details with purchase option
-- `/profile` — User profile and purchase history (protected)
-- `/admin` — Admin dashboard with stats and fleet registry (admin only)
-- `/admin/add-vehicle` — Add new vehicle (admin only)
-- `/admin/edit-vehicle/:id` — Edit vehicle (admin only)
-- `*` — 404 Not Found
+- `/vehicles` — Showroom catalog with sidebar filtering, search, sorting, and grid/list view toggle
+- `/vehicles/:id` — Vehicle specification details page, with EMI calculator, callback request form, and purchase checkout wizard
+- `/profile` — User profile summary page
+- `/wishlist` — Saved vehicles comparison panel
+- `/compare` — Side-by-side spec sheet vehicle comparison page
+- `/purchases` — "My Reservations" customer tracking dashboard with invoice link and reservation status timeline
+- `/invoice/:purchaseId` — Print-optimized invoice page with PDF generation option
+- `/admin` — Fleet statistics and database registry management dashboard (Admin only)
+- `/admin/purchases` — Global sales registry dashboard (Admin only)
+- `/admin/add-vehicle` — Add vehicle inventory specifications (Admin only)
+- `/admin/edit-vehicle/:id` — Edit vehicle inventory properties (Admin only)
+- `*` — 404 Not Found page
 
 ## Role Permissions
 
-- **Guest**: browse vehicles, search/filter, redirect to login for purchase
-- **User**: register/login, browse, search, purchase, view profile
-- **Admin**: full dashboard access, add/edit/delete/restock inventory
+- **Guest**: Browse vehicles, search/filter, request callbacks, compare vehicles.
+- **User**: Register/login, browse, search, purchase, wishlist vehicles, track reservation timeline, download invoice.
+- **Admin**: Access global sales logs, transition reservation statuses, add/edit/delete/restock vehicle fleets.
