@@ -121,19 +121,12 @@ npm run test
 
 Below is a gallery of the premium CAR-DIS interface screenshots (assets organized under `assets/screenshots/`):
 
-- **Interactive Showroom (Grid Card Catalog)**:
   ![Interactive Showroom](assets/screenshots/image1.png)
-- **Dealership List Card View**:
   ![Dealership List Card View](assets/screenshots/image3.png)
-- **Filters Sidebar & Custom Dropdowns**:
   ![Filters Sidebar](assets/screenshots/image4.png)
-- **Vehicle Specification Details Page**:
   ![Vehicle Details](assets/screenshots/image8.png)
-- **Sticky Transaction Checkout & EMI Calculator**:
   ![Checkout Wizard](assets/screenshots/image10.png)
-- **Print-Optimized E-Invoice Printable PDF**:
   ![E-Invoice PDF](assets/screenshots/image16.png)
-- **Sales Analytics & Orders Admin Dashboard**:
   ![Admin Dashboard](assets/screenshots/image17.png)
 
 ---
