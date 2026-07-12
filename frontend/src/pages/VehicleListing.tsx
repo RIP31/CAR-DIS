@@ -5,7 +5,11 @@ import type { Vehicle } from '../types';
 import MainLayout from '../layouts/MainLayout';
 import VehicleCard from '../components/VehicleCard';
 import { ListingSkeleton } from '../components/LoadingSkeleton';
-import { SlidersHorizontal, ArrowUpDown, X, Grid, List, ChevronLeft, ChevronRight } from 'lucide-react';
+import { SlidersHorizontal, X, Grid, List, ChevronLeft, ChevronRight } from 'lucide-react';
+import PriceRangeFilter from '../components/PriceRangeFilter';
+import SortDropdown from '../components/SortDropdown';
+import VehicleListItem from '../components/VehicleListItem';
+import FilterDropdown from '../components/FilterDropdown';
 
 import { parseVehicleDescription } from '../utils/vehicleHelper';
 
@@ -207,20 +211,7 @@ const VehicleListing: React.FC = () => {
             </div>
 
             {/* Sort Dropdown */}
-            <div className="flex items-center gap-2 bg-white border border-slate-200 px-3 py-1.5 rounded-xl text-sm font-semibold text-slate-700">
-              <ArrowUpDown className="h-4 w-4 text-blue-600" />
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="bg-transparent text-slate-800 outline-none border-none cursor-pointer pr-4"
-              >
-                <option value="latest">Latest Added</option>
-                <option value="price_asc">Price: Low → High</option>
-                <option value="price_desc">Price: High → Low</option>
-                <option value="newest">Newest Model Year</option>
-                <option value="oldest">Oldest Model Year</option>
-              </select>
-            </div>
+            <SortDropdown value={sortBy} onChange={setSortBy} />
 
             {/* Mobile Filter toggle */}
             <button
@@ -292,37 +283,23 @@ const VehicleListing: React.FC = () => {
               {/* Category Select */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Category</label>
-                <select
+                <FilterDropdown
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm font-semibold"
-                >
-                  <option value="">All Categories</option>
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
+                  onChange={setCategory}
+                  options={CATEGORIES}
+                  defaultLabel="All Categories"
+                />
               </div>
 
               {/* Pricing Range */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pricing Range ($)</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    value={minPrice}
-                    onChange={(e) => setMinPrice(e.target.value)}
-                    className="bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm w-full"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                    className="bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm w-full"
-                  />
-                </div>
+                <PriceRangeFilter
+                  minPrice={minPrice}
+                  maxPrice={maxPrice}
+                  setMinPrice={setMinPrice}
+                  setMaxPrice={setMaxPrice}
+                />
               </div>
 
               {/* Year Select */}
@@ -340,31 +317,23 @@ const VehicleListing: React.FC = () => {
               {/* Fuel Type */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Fuel Type</label>
-                <select
+                <FilterDropdown
                   value={fuelType}
-                  onChange={(e) => setFuelType(e.target.value)}
-                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm font-semibold"
-                >
-                  <option value="">All Fuel Types</option>
-                  {FUEL_TYPES.map((ft) => (
-                    <option key={ft} value={ft}>{ft}</option>
-                  ))}
-                </select>
+                  onChange={setFuelType}
+                  options={FUEL_TYPES}
+                  defaultLabel="All Fuel Types"
+                />
               </div>
 
               {/* Transmission */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Transmission</label>
-                <select
+                <FilterDropdown
                   value={transmission}
-                  onChange={(e) => setTransmission(e.target.value)}
-                  className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2 px-3 outline-none focus:border-blue-600/30 text-sm font-semibold"
-                >
-                  <option value="">All Transmissions</option>
-                  {TRANSMISSIONS.map((tr) => (
-                    <option key={tr} value={tr}>{tr}</option>
-                  ))}
-                </select>
+                  onChange={setTransmission}
+                  options={TRANSMISSIONS}
+                  defaultLabel="All Transmissions"
+                />
               </div>
 
               {/* AvailabilityCheckbox */}
@@ -410,16 +379,21 @@ const VehicleListing: React.FC = () => {
                   }
                 >
                   {paginatedVehicles.map((vehicle) => (
-                    <div
-                      key={vehicle.id}
-                      className={viewMode === 'list' ? 'h-auto sm:h-52 w-full flex flex-col sm:flex-row' : ''}
-                    >
+                    viewMode === 'grid' ? (
                       <VehicleCard
+                        key={vehicle.id}
                         vehicle={vehicle}
                         onUpdate={handleUpdateVehicle}
                         onDelete={handleDeleteVehicle}
                       />
-                    </div>
+                    ) : (
+                      <VehicleListItem
+                        key={vehicle.id}
+                        vehicle={vehicle}
+                        onUpdate={handleUpdateVehicle}
+                        onDelete={handleDeleteVehicle}
+                      />
+                    )
                   ))}
                 </div>
 
@@ -521,35 +495,21 @@ const VehicleListing: React.FC = () => {
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Category</label>
-                  <select
+                  <FilterDropdown
                     value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm font-semibold focus:border-blue-600/30"
-                  >
-                    <option value="">All Categories</option>
-                    {CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
+                    onChange={setCategory}
+                    options={CATEGORIES}
+                    defaultLabel="All Categories"
+                  />
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Price Range ($)</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <input
-                      type="number"
-                      placeholder="Min"
-                      value={minPrice}
-                      onChange={(e) => setMinPrice(e.target.value)}
-                      className="bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm w-full focus:border-blue-600/30"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Max"
-                      value={maxPrice}
-                      onChange={(e) => setMaxPrice(e.target.value)}
-                      className="bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm w-full focus:border-blue-600/30"
-                    />
-                  </div>
+                  <PriceRangeFilter
+                    minPrice={minPrice}
+                    maxPrice={maxPrice}
+                    setMinPrice={setMinPrice}
+                    setMaxPrice={setMaxPrice}
+                  />
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Year</label>
@@ -563,29 +523,21 @@ const VehicleListing: React.FC = () => {
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Fuel Type</label>
-                  <select
+                  <FilterDropdown
                     value={fuelType}
-                    onChange={(e) => setFuelType(e.target.value)}
-                    className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm font-semibold focus:border-blue-600/30"
-                  >
-                    <option value="">All Fuel Types</option>
-                    {FUEL_TYPES.map((ft) => (
-                      <option key={ft} value={ft}>{ft}</option>
-                    ))}
-                  </select>
+                    onChange={setFuelType}
+                    options={FUEL_TYPES}
+                    defaultLabel="All Fuel Types"
+                  />
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Transmission</label>
-                  <select
+                  <FilterDropdown
                     value={transmission}
-                    onChange={(e) => setTransmission(e.target.value)}
-                    className="w-full bg-white border border-slate-200 text-slate-950 rounded-xl py-2.5 px-4 outline-none text-sm font-semibold focus:border-blue-600/30"
-                  >
-                    <option value="">All Transmissions</option>
-                    {TRANSMISSIONS.map((tr) => (
-                      <option key={tr} value={tr}>{tr}</option>
-                    ))}
-                  </select>
+                    onChange={setTransmission}
+                    options={TRANSMISSIONS}
+                    defaultLabel="All Transmissions"
+                  />
                 </div>
                 <div className="flex items-center gap-2 pt-2">
                   <input

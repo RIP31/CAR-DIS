@@ -117,5 +117,19 @@ npm run test
 
 ---
 
+## 📸 Screenshot Gallery
+
+Below is a gallery of the premium CAR-DIS interface screenshots (assets organized under `assets/screenshots/`):
+
+- **Interactive Showroom (Grid Card Catalog)**: [assets/screenshots/image1.png](assets/screenshots/image1.png)
+- **Dealership List Card View**: [assets/screenshots/image3.png](assets/screenshots/image3.png)
+- **Filters Sidebar & Custom Dropdowns**: [assets/screenshots/image4.png](assets/screenshots/image4.png)
+- **Vehicle Specification Details Page**: [assets/screenshots/image8.png](assets/screenshots/image8.png)
+- **Sticky Transaction Checkout & EMI Calculator**: [assets/screenshots/image10.png](assets/screenshots/image10.png)
+- **Print-Optimized E-Invoice Printable PDF**: [assets/screenshots/image16.png](assets/screenshots/image16.png)
+- **Sales Analytics & Orders Admin Dashboard**: [assets/screenshots/image17.png](assets/screenshots/image17.png)
+
+---
+
 ## 🤖 AI Development
 Developed with assistance from the **Antigravity** (Google DeepMind) AI coding assistant.

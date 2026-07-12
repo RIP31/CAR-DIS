@@ -37,33 +37,33 @@ const CallbackForm: React.FC = () => {
   };
 
   return (
-    <div className="glass rounded-3xl border border-white/5 bg-[#0d0e12]/60 p-6 md:p-8 space-y-6">
+    <div className="glass rounded-3xl border border-slate-200/60 p-6 md:p-8 space-y-6 shadow-xl shadow-slate-200/50">
       <div className="space-y-2">
-        <h3 className="text-xl font-bold text-white tracking-tight">Request a Callback</h3>
-        <p className="text-slate-400 text-sm">Fill in your details and our team will call you back at your preferred time.</p>
+        <h3 className="text-xl font-bold text-slate-900 tracking-tight">Request a Callback</h3>
+        <p className="text-slate-500 text-sm">Fill in your details and our team will call you back at your preferred time.</p>
       </div>
 
       {/* Dealer Contact Info */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="flex items-center gap-2 bg-white/3 rounded-xl p-3 border border-white/5">
-          <Phone className="h-4 w-4 text-teal-400 shrink-0" />
+        <div className="flex items-center gap-3 bg-slate-50/50 rounded-xl p-3 border border-slate-100">
+          <Phone className="h-4 w-4 text-blue-600 shrink-0" />
           <div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Phone</span>
-            <a href={`tel:${CONTACT.phone}`} className="text-white text-xs font-semibold hover:text-teal-400 transition-colors">{CONTACT.phone}</a>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Phone</span>
+            <a href={`tel:${CONTACT.phone}`} className="text-slate-800 text-xs font-semibold hover:text-blue-600 transition-colors">{CONTACT.phone}</a>
           </div>
         </div>
-        <div className="flex items-center gap-2 bg-white/3 rounded-xl p-3 border border-white/5">
-          <Clock className="h-4 w-4 text-teal-400 shrink-0" />
+        <div className="flex items-center gap-3 bg-slate-50/50 rounded-xl p-3 border border-slate-100">
+          <Clock className="h-4 w-4 text-blue-600 shrink-0" />
           <div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Working Hours</span>
-            <span className="text-white text-xs font-semibold">{CONTACT.hours}</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Working Hours</span>
+            <span className="text-slate-800 text-xs font-semibold">{CONTACT.hours}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 bg-white/3 rounded-xl p-3 border border-white/5">
-          <Mail className="h-4 w-4 text-teal-400 shrink-0" />
+        <div className="flex items-center gap-3 bg-slate-50/50 rounded-xl p-3 border border-slate-100">
+          <Mail className="h-4 w-4 text-blue-600 shrink-0" />
           <div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Email</span>
-            <a href={`mailto:${CONTACT.email}`} className="text-white text-xs font-semibold hover:text-teal-400 transition-colors">{CONTACT.email}</a>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Email</span>
+            <a href={`mailto:${CONTACT.email}`} className="text-slate-800 text-xs font-semibold hover:text-blue-600 transition-colors">{CONTACT.email}</a>
           </div>
         </div>
       </div>
@@ -71,56 +71,56 @@ const CallbackForm: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Full Name *</label>
+            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Full Name *</label>
             <input
               type="text"
               required
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="John Doe"
-              className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-2.5 px-3 text-sm outline-none focus:border-teal-500/30 placeholder:text-slate-600"
+              className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl py-2.5 px-3.5 text-sm outline-none focus:border-blue-500/50 focus:bg-white transition-all placeholder:text-slate-400"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Phone Number *</label>
+            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Phone Number *</label>
             <input
               type="tel"
               required
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               placeholder="+971 50 123 4567"
-              className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-2.5 px-3 text-sm outline-none focus:border-teal-500/30 placeholder:text-slate-600"
+              className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl py-2.5 px-3.5 text-sm outline-none focus:border-blue-500/50 focus:bg-white transition-all placeholder:text-slate-400"
             />
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Preferred Callback Time *</label>
+          <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Preferred Callback Time *</label>
           <input
             type="text"
             required
             value={form.preferred_time}
             onChange={(e) => setForm({ ...form, preferred_time: e.target.value })}
             placeholder="e.g. Tomorrow 10 AM - 12 PM"
-            className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-2.5 px-3 text-sm outline-none focus:border-teal-500/30 placeholder:text-slate-600"
+            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl py-2.5 px-3.5 text-sm outline-none focus:border-blue-500/50 focus:bg-white transition-all placeholder:text-slate-400"
           />
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Message (Optional)</label>
+          <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Message (Optional)</label>
           <textarea
             rows={3}
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
             placeholder="Tell us what you're looking for..."
-            className="w-full bg-white/3 border border-white/5 text-white rounded-xl py-2.5 px-3 text-sm outline-none focus:border-teal-500/30 placeholder:text-slate-600 resize-none"
+            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl py-2.5 px-3.5 text-sm outline-none focus:border-blue-500/50 focus:bg-white transition-all placeholder:text-slate-400 resize-none"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-white hover:bg-slate-200 text-black py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border-none cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border-none cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-slate-900/10"
         >
           {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
